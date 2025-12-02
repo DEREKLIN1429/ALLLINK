@@ -5,13 +5,14 @@ const TITLE_LOGIN = '生產智能系統彙整 登入 | Production Intelligence S
 const TITLE_USER_MODE = '生產智能系統彙整 | Production Intelligence System Integration';
 const TITLE_ADMIN_MODE = '🛠️ 工作站功能選單 | Workstation Features Menu';
 
-const ADMIN_PASSWORD = '12345'; // 管理密碼
+const ADMIN_PASSWORD = '12345'; 
 const STORAGE_KEY = 'factory_links_data';
+const USER_ID_KEY = 'current_user_id'; // 新增：用於儲存 ID 的 Key
 let currentLinks = []; 
 let currentMode = 'GUEST'; 
-let currentUserID = ''; // 新增：記憶登入 ID
+let currentUserID = ''; 
 
-// 常用的 Font Awesome 圖示清單 (保持不變)
+// ... (ICON_OPTIONS, DEFAULT_LINKS 保持不變，為節省篇幅省略)
 const ICON_OPTIONS = [
     { class: 'fas fa-link', name: '預設/連結 (Link)' },
     { class: 'fas fa-exclamation-triangle', name: '警示/報修 (Warning)' },
@@ -24,7 +25,6 @@ const ICON_OPTIONS = [
     { class: 'fas fa-users', name: '人員/團隊 (Users)' },
 ];
 
-// 修正：預設連結清單 (加入 Extrusion-Inventory)
 const DEFAULT_LINKS = [
     { id: 1, name: 'Machine-NG 報修', url: 'https://dereklin1429.github.io/Machine-NG/', icon: 'fas fa-exclamation-triangle' },
     { id: 2, name: '5S Audit 表單', url: 'https://dereklin1429.github.io/5S-audit/', icon: 'fas fa-clipboard-check' },
@@ -58,7 +58,7 @@ function setTitles(mode) {
 }
 
 // =======================================================
-// 函數：CRUD / 渲染 - 修正 renderSettingsList 使用大按鈕
+// 函數：CRUD / 渲染
 // =======================================================
 
 function loadLinks() {
@@ -68,14 +68,18 @@ function loadLinks() {
     } else {
         currentLinks = DEFAULT_LINKS;
     }
+    // 嘗試載入記憶的 ID
+    currentUserID = localStorage.getItem(USER_ID_KEY) || '';
 }
 
 function saveLinks() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(currentLinks));
 }
 
+/**
+ * 修正：使用者模式按鈕點擊後直接連結，不彈出修改介面
+ */
 function renderUserButtons() {
-    // ... (使用者按鈕渲染邏輯保持不變) ...
     const grid = document.getElementById('mainFeatures');
     grid.innerHTML = ''; 
 
@@ -97,48 +101,22 @@ function renderUserButtons() {
             <span>${link.name}</span>
         `;
         
+        // 點擊事件：直接連結
         button.addEventListener('click', () => {
-             promptForNewUrl(link);
+             if (link.url) {
+                window.open(link.url, '_blank');
+            } else {
+                alert('此按鈕尚未設定網址！請聯絡管理員。');
+            }
         });
 
         grid.appendChild(button);
     });
 }
 
-function promptForNewUrl(link) {
-    if (currentMode !== 'USER') {
-        alert('請先進入使用者模式才能使用此功能！');
-        return;
-    }
-
-    const currentUrl = link.url;
-    const newUrl = prompt(
-        `[${link.name}] \n點擊「取消」或輸入空值將使用舊網址。\n\n目前網址 (Current URL):\n${currentUrl}\n\n輸入新網址 (Enter New URL):`,
-        currentUrl 
-    );
-    
-    if (newUrl === null || newUrl.trim() === currentUrl.trim()) {
-        if (currentUrl) {
-            window.open(currentUrl, '_blank');
-        } else {
-            alert('此按鈕尚未設定網址！請聯絡管理員。');
-        }
-    } else if (newUrl.trim() !== '') {
-        const newUrlTrimmed = newUrl.trim();
-        link.url = newUrlTrimmed;
-        
-        saveLinks(); 
-        renderUserButtons(); 
-        
-        alert(`[${link.name}] 網址已更新並儲存！將開啟新連結: ${newUrlTrimmed}`);
-        window.open(newUrlTrimmed, '_blank');
-    } else {
-        alert('網址輸入無效，請重新嘗試。');
-    }
-}
+// 移除原有的 promptForNewUrl 函數，行為已合併到 renderUserButtons
 
 function populateIconSelect(selectedValue = '') {
-    // ... (下拉選單填充邏輯保持不變) ...
     const select = document.getElementById('edit-icon');
     select.innerHTML = ''; 
     
@@ -170,13 +148,13 @@ function renderSettingsList() {
 
     currentLinks.forEach(link => {
         const item = document.createElement('div');
-        item.className = 'admin-item-btn'; // 使用新的大按鈕樣式
+        item.className = 'admin-item-btn'; // 使用大按鈕樣式
         item.innerHTML = `
             <div class="item-name">${link.name}</div>
             <div class="item-url">${link.url}</div>
             <div class="admin-item-actions">
-                <button class="edit-btn" onclick="editLink(${link.id})">編輯</button>
-                <button class="delete-btn" onclick="deleteLink(${link.id})">刪除</button>
+                <button class="edit-btn" onclick="editLink(${link.id})">編輯 | Edit</button>
+                <button class="delete-btn" onclick="deleteLink(${link.id})">刪除 | Delete</button>
             </div>
         `;
         container.appendChild(item);
@@ -184,7 +162,7 @@ function renderSettingsList() {
 }
 
 /**
- * 顯示新增/修改 Modal
+ * 顯示新增/修改 Modal (大按鈕風格介面)
  */
 function showAddForm(id = null) {
     const modal = document.getElementById('editModal');
@@ -193,7 +171,7 @@ function showAddForm(id = null) {
     const urlInput = document.getElementById('edit-url');
     let selectedIconClass = '';
     
-    modal.style.display = 'block'; // 顯示 Modal
+    modal.style.display = 'block';
 
     if (id !== null) {
         // 修改模式
@@ -216,9 +194,6 @@ function showAddForm(id = null) {
     populateIconSelect(selectedIconClass);
 }
 
-/**
- * 隱藏 Modal
- */
 function hideAddForm() {
     document.getElementById('editModal').style.display = 'none';
 }
@@ -232,14 +207,12 @@ function handleFormSubmit(e) {
     const icon = document.getElementById('edit-icon').value.trim(); 
 
     if (id) {
-        // 修改
         const index = currentLinks.findIndex(l => l.id === parseInt(id));
         if (index !== -1) {
             currentLinks[index] = { id: parseInt(id), name, url, icon };
         }
         alert(`連結 ${name} 已修改！`);
     } else {
-        // 新增
         const newId = currentLinks.length > 0 ? Math.max(...currentLinks.map(l => l.id)) + 1 : 1;
         currentLinks.push({ id: newId, name, url, icon });
         alert(`連結 ${name} 已新增！`);
@@ -247,11 +220,11 @@ function handleFormSubmit(e) {
 
     saveLinks(); 
     renderSettingsList(); 
-    hideAddForm(); // 儲存後隱藏 Modal
+    hideAddForm(); 
 }
 
 function editLink(id) {
-    showAddForm(id); // 按下編輯，顯示 Modal
+    showAddForm(id); 
 }
 
 function deleteLink(id) {
@@ -266,7 +239,7 @@ function deleteLink(id) {
 
 
 // =======================================================
-// 函數：模式切換 (登入/登出) - 修正 ID 記憶顯示
+// 函數：模式切換 (登入/登出) - ID 記憶與登入
 // =======================================================
 
 function initPage() {
@@ -274,11 +247,33 @@ function initPage() {
     renderUserButtons();
     setTitles('GUEST');
     
+    // 檢查是否有記憶的 ID，如果有則預填
+    const userIDInput = document.getElementById('userIDInput');
+    if (currentUserID) {
+        userIDInput.value = currentUserID;
+    }
+
     document.getElementById('modeSelectSection').style.display = 'grid'; 
     document.getElementById('mainFeatures').style.display = 'none';
     document.getElementById('settingsPanel').style.display = 'none';
     document.getElementById('logoutSection').style.display = 'none';
     document.getElementById('hrDivider').style.display = 'none';
+}
+
+/**
+ * 修正：處理 ID 輸入登入，並記憶 ID
+ */
+function handleLogin() {
+    const userIDInput = document.getElementById('userIDInput');
+    const inputID = userIDInput.value.trim();
+
+    if (inputID !== '') {
+        currentUserID = inputID;
+        localStorage.setItem(USER_ID_KEY, inputID); // 記憶 ID
+        enterUserMode(inputID);
+    } else {
+        alert('請輸入您的 ID (Please enter your ID)。');
+    }
 }
 
 function showAdminPrompt() {
@@ -292,16 +287,27 @@ function showAdminPrompt() {
 }
 
 function exitAdminView() {
-    handleLogout(); 
+    handleLogout(false); // 退出管理員畫面不清除 ID
     alert('已退出管理員設定畫面 (Exited Admin Setup View)。');
 }
 
 
-function handleLogout() {
+/**
+ * 處理登出，可選擇是否清除記憶的 ID
+ * @param {boolean} clearID - 是否清除 localStorage 中的 ID，預設為 true (實際登出)
+ */
+function handleLogout(clearID = true) {
+    if (clearID) {
+        localStorage.removeItem(USER_ID_KEY);
+        currentUserID = '';
+    }
+
     currentMode = 'GUEST';
-    currentUserID = ''; // 重置 ID
     setTitles('GUEST');
     
+    // 登出後，將 ID 輸入框清空
+    document.getElementById('userIDInput').value = currentUserID;
+
     document.getElementById('modeSelectSection').style.display = 'grid'; 
     document.getElementById('logoutSection').style.display = 'none';
     document.getElementById('mainFeatures').style.display = 'none';
@@ -322,12 +328,8 @@ function enterSettingsMode() {
     renderSettingsList(); 
 }
 
-/**
- * 進入使用者模式 (由大按鈕觸發)
- */
 function enterUserMode(userID) {
     currentMode = 'USER';
-    currentUserID = userID; // 記憶 ID
     setTitles('USER');
     
     document.getElementById('modeSelectSection').style.display = 'none';
@@ -336,8 +338,7 @@ function enterUserMode(userID) {
     document.getElementById('settingsPanel').style.display = 'none';
     document.getElementById('hrDivider').style.display = 'block'; 
     
-    // 顯示記憶的 ID
-    document.getElementById('welcomeMessage').textContent = `歡迎, ${currentUserID} (Welcome, ${currentUserID})`;
+    document.getElementById('welcomeMessage').textContent = `歡迎, ${userID} (Welcome, ${userID})`;
 }
 
 
