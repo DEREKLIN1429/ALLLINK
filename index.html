@@ -14,12 +14,19 @@
             <span class="author-info-header">Author: DEREK LIN</span>
         </div>
 
-        <div class="mode-selection-section" id="loginSection">
-            <label for="passwordInput">請輸入 ID (Enter ID)：</label>
-            <input type="text" id="passwordInput" placeholder="輸入您的 ID">
-            <button id="loginBtn" onclick="handleLogin()">登入 | Login</button>
-            
-            <button id="adminSetupBtn" onclick="showAdminPrompt()">⚙️ 管理設定 | Admin Setup</button>
+        <div class="mode-buttons-grid" id="modeSelectSection">
+            <button class="mode-btn mode-btn-user" onclick="enterUserMode('使用者')">
+                <i class="fas fa-desktop fa-4x"></i>
+                <span>使用者模式 | User Mode</span>
+            </button>
+            <button class="mode-btn mode-btn-admin" onclick="showAdminPrompt()">
+                <i class="fas fa-lock fa-4x"></i>
+                <span>管理設定 | Admin Setup</span>
+            </button>
+            <button class="mode-btn mode-btn-exit" onclick="alert('請關閉瀏覽器或重新整理頁面。')">
+                <i class="fas fa-sign-out-alt fa-4x"></i>
+                <span>退出 | Exit</span>
+            </button>
         </div>
 
         <div class="mode-selection-section" id="logoutSection" style="display: none;">
@@ -27,7 +34,7 @@
             <button id="logoutBtn" onclick="handleLogout()">登出 | Logout</button>
         </div>
 
-        <hr>
+        <hr id="hrDivider" style="display: none;">
         
         <div class="button-grid" id="mainFeatures" style="display: none;">
             </div>
@@ -51,8 +58,7 @@
                 <input type="url" id="edit-url" required placeholder="https://your.link.com/page"><br>
 
                 <label for="edit-icon">圖示 (Font Awesome Icon Class) | Icon Class:</label>
-                <select id="edit-icon">
-                    </select><br>
+                <select id="edit-icon"></select><br>
                 
                 <button type="submit">儲存 | Save</button>
                 <button type="button" onclick="hideAddForm()">取消 | Cancel</button>
@@ -60,7 +66,7 @@
         </div>
         
     </div>
-
+    
     <script src="script.js"></script>
 </body>
 </html>
