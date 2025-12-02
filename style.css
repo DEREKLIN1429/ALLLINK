@@ -1,290 +1,42 @@
-:root {
-    --primary-color: #FF8C00; /* 主橘色 */
-    --secondary-color: #000000; /* 主黑色/背景色 */
-    --accent-color: #28A745; /* 輔助綠色 */
-    --text-color-light: #f5f5f5; /* 淺色文字 */
-    --text-color-dark: #cccccc; /* 深色文字 */
-    --button-bg: #333333; /* 按鈕背景 */
-    --hover-shadow: rgba(255, 140, 0, 0.7);
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    background: linear-gradient(135deg, #0a0a0a, #1a1a1a); /* 漸變背景 */
-    color: var(--text-color-light);
-}
-
-.container {
-    background-color: var(--secondary-color); /* 黑色主體 */
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px var(--hover-shadow); /* 讓整個介面有立體浮動感 */
-    width: 90%;
-    max-width: 900px; /* 加大容器寬度 */
-    text-align: center;
-    border: 1px solid var(--primary-color);
-}
-
-h1 {
-    color: var(--primary-color);
-    margin-bottom: 25px;
-    border-bottom: 3px solid var(--primary-color);
-    padding-bottom: 10px;
-    text-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
-}
-
-/* 登入/模式切換區樣式 */
-.mode-selection-section {
-    padding: 15px;
-    border: 1px solid var(--text-color-dark);
-    border-radius: 8px;
-    margin-bottom: 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-}
-
-#passwordInput {
-    padding: 10px;
-    border: 2px solid var(--primary-color);
-    border-radius: 6px;
-    font-size: 18px;
-    background-color: #111;
-    color: var(--text-color-light);
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5); /* 內凹效果 */
-}
-
-#loginBtn {
-    padding: 10px 20px;
-    background-color: var(--primary-color);
-    color: var(--secondary-color);
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-weight: bold;
-    box-shadow: 0 4px 0 #cc7000; /* 立體底座 */
-    transform: translateY(-2px);
-}
-
-#loginBtn:hover {
-    background-color: #e07b00;
-    box-shadow: 0 2px 0 #cc7000;
-    transform: translateY(0); /* 按下效果 */
-}
-
-/* 獨立的管理設定按鈕樣式 */
-#adminSetupBtn {
-    padding: 10px 15px;
-    background-color: var(--accent-color); /* 綠色按鈕 */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-weight: bold;
-    box-shadow: 0 4px 0 #1e7e34;
-    transform: translateY(-2px);
-}
-
-#adminSetupBtn:hover {
-    background-color: #1e7e34;
-    box-shadow: 0 2px 0 #1e7e34;
-    transform: translateY(0);
-}
-
-hr {
-    border-top: 1px solid var(--text-color-dark);
-}
-
-/* 圖形按鈕網格佈局 (強制 3 欄) */
-.button-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 固定 3 欄佈局 */
-    gap: 30px; /* 增加間距 */
-    padding-top: 30px;
-}
-
-/* 圖形按鈕樣式 (加大、立體化、正方形) */
-.icon-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 30px 15px; 
-    
-    aspect-ratio: 1 / 1; /* 核心變更：強制為正方形 */
-
-    border: 1px solid #444;
-    border-radius: 15px;
-    background: linear-gradient(to bottom right, var(--button-bg), #222222); /* 漸變背景 */
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 18px;
-    font-weight: bold;
-    color: var(--text-color-light);
-    box-shadow: 0 6px 0 var(--accent-color); /* 立體綠色底座 */
-}
-
-.icon-btn:hover {
-    background: linear-gradient(to top left, var(--button-bg), #444444);
-    box-shadow: 0 0 20px var(--hover-shadow), 0 3px 0 var(--accent-color); /* 橘色發光與輕微按下 */
-    transform: translateY(3px); 
-    border-color: var(--primary-color);
-}
-
-/* Font Awesome 圖示樣式 */
-.btn-icon-fa {
-    color: var(--primary-color); /* 橘色圖示 */
-    margin-bottom: 15px;
-    font-size: 4em !important; /* 加大圖示 */
-}
-
-.icon-btn[disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background-color: #222;
-    box-shadow: none;
-    transform: translateY(0);
-}
-
-/* -------------------- 設定區塊樣式 (黑橘綠搭配) -------------------- */
-.settings-section {
-    text-align: left;
-    padding: 25px;
-    border: 2px solid var(--accent-color); /* 設定區邊框改為綠色 */
-    border-radius: 10px;
-    margin-top: 25px;
-    background-color: #111111; /* 設定區背景更深 */
-    color: var(--text-color-light);
-    box-shadow: 0 0 15px rgba(40, 167, 69, 0.5);
-}
-
-.settings-section h2 {
-    color: var(--accent-color);
-    border-bottom: 2px solid var(--accent-color);
-    padding-bottom: 10px;
-}
-
-/* CRUD 按鈕樣式 */
-#addNewBtn, #exitSettingsBtn {
-    padding: 10px 15px;
+/* 新增：作者資訊 */
+.author-info {
     margin-top: 20px;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 3px 0 #1e7e34;
-    transform: translateY(-2px);
-    transition: all 0.2s;
-}
-
-#addNewBtn {
-    background-color: var(--accent-color); /* 新增按鈕使用綠色 */
-    color: white;
-}
-#addNewBtn:hover { background-color: #1e7e34; box-shadow: 0 1px 0 #1e7e34; transform: translateY(0);}
-
-
-#exitSettingsBtn {
-    background-color: var(--primary-color); /* 退出按鈕使用橘色 */
-    color: var(--secondary-color);
-    box-shadow: 0 3px 0 #cc7000;
-}
-#exitSettingsBtn:hover { background-color: #e07b00; box-shadow: 0 1px 0 #cc7000; transform: translateY(0);}
-
-/* 設定區塊內清單樣式 */
-#urlListContainer {
-    margin-bottom: 20px;
-}
-
-.url-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    margin-bottom: 8px;
-    background-color: #222222; /* 項目背景 */
-    border-left: 5px solid var(--accent-color); /* 綠色條 */
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.url-details span {
-    display: block;
+    font-size: 0.8em;
     color: var(--text-color-dark);
 }
 
-.url-details strong {
-    color: var(--primary-color); /* 連結名稱用橘色 */
-    font-size: 16px;
-}
-
-.url-actions button {
-    margin-left: 10px;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.url-actions button.edit-btn {
-    background-color: #007bff; /* 藍色編輯 */
-    color: white;
-}
-
-.url-actions button.delete-btn {
-    background-color: #dc3545; /* 紅色刪除 */
-    color: white;
-}
-
-/* 新增/編輯表單樣式 */
-.edit-form {
-    margin-top: 20px;
+/* 新增：登出區和歡迎文字樣式 */
+#logoutSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 15px;
-    border: 1px dashed var(--accent-color);
+    border: 1px solid var(--accent-color);
     border-radius: 8px;
-    background-color: #1a1a1a;
+    margin-bottom: 25px;
+    background-color: #111;
 }
-.edit-form h3 { color: var(--accent-color); margin-top: 0; }
 
-#editUrlForm label {
-    display: block;
-    margin-top: 15px;
+.welcome-text {
+    font-size: 1.1em;
     font-weight: bold;
-    color: var(--text-color-light);
+    color: var(--primary-color);
 }
 
-#editUrlForm input { 
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid var(--accent-color); 
-    border-radius: 4px;
-    box-sizing: border-box;
-    background-color: #000;
-    color: var(--text-color-light);
-}
-
-#editUrlForm button[type="submit"] {
-    background-color: var(--accent-color);
-    color: white;
-    box-shadow: 0 3px 0 #1e7e34;
-    transform: translateY(-2px);
-    margin-right: 10px;
-}
-#editUrlForm button[type="submit"]:hover { background-color: #1e7e34; box-shadow: 0 1px 0 #1e7e34; transform: translateY(0);}
-
-#editUrlForm button[type="button"] {
-    background-color: #6c757d; 
-    color: var(--text-color-light);
-    border-radius: 5px;
-    border: none;
+#logoutBtn {
     padding: 10px 20px;
+    background-color: #dc3545; /* 紅色登出 */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: bold;
+    box-shadow: 0 4px 0 #b02a37;
+    transform: translateY(-2px);
+}
+#logoutBtn:hover {
+    background-color: #b02a37;
+    box-shadow: 0 2px 0 #b02a37;
+    transform: translateY(0);
 }
