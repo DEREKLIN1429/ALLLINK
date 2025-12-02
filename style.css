@@ -79,25 +79,48 @@ h1 {
     transform: translateY(0); /* 按下效果 */
 }
 
+/* 獨立的管理設定按鈕樣式 */
+#adminSetupBtn {
+    padding: 10px 15px;
+    background-color: var(--accent-color); /* 綠色按鈕 */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: bold;
+    box-shadow: 0 4px 0 #1e7e34;
+    transform: translateY(-2px);
+}
+
+#adminSetupBtn:hover {
+    background-color: #1e7e34;
+    box-shadow: 0 2px 0 #1e7e34;
+    transform: translateY(0);
+}
+
 hr {
     border-top: 1px solid var(--text-color-dark);
 }
 
-/* 圖形按鈕網格佈局 (加大按鈕區) */
+/* 圖形按鈕網格佈局 (強制 3 欄) */
 .button-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* 增加最小寬度 */
+    grid-template-columns: repeat(3, 1fr); /* 固定 3 欄佈局 */
     gap: 30px; /* 增加間距 */
     padding-top: 30px;
 }
 
-/* 圖形按鈕樣式 (加大、立體化) */
+/* 圖形按鈕樣式 (加大、立體化、正方形) */
 .icon-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 30px 15px; /* 增加填充 */
+    padding: 30px 15px; 
+    
+    aspect-ratio: 1 / 1; /* 核心變更：強制為正方形 */
+
     border: 1px solid #444;
     border-radius: 15px;
     background: linear-gradient(to bottom right, var(--button-bg), #222222); /* 漸變背景 */
@@ -176,32 +199,75 @@ hr {
 }
 #exitSettingsBtn:hover { background-color: #e07b00; box-shadow: 0 1px 0 #cc7000; transform: translateY(0);}
 
+/* 設定區塊內清單樣式 */
+#urlListContainer {
+    margin-bottom: 20px;
+}
 
-/* URL 列表項目 */
 .url-item {
-    background-color: #222222;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 8px;
+    background-color: #222222; /* 項目背景 */
     border-left: 5px solid var(--accent-color); /* 綠色條 */
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.url-details span {
+    display: block;
+    color: var(--text-color-dark);
 }
 
 .url-details strong {
     color: var(--primary-color); /* 連結名稱用橘色 */
+    font-size: 16px;
 }
 
 .url-actions button {
-    box-shadow: none;
-    transform: none;
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
-.url-actions button.edit-btn { background-color: #007bff; }
-.url-actions button.delete-btn { background-color: #dc3545; }
 
-/* 新增/編輯表單 */
-.edit-form {
-    background-color: #1a1a1a;
-    border: 1px dashed var(--accent-color);
+.url-actions button.edit-btn {
+    background-color: #007bff; /* 藍色編輯 */
+    color: white;
 }
-.edit-form h3 { color: var(--accent-color); }
+
+.url-actions button.delete-btn {
+    background-color: #dc3545; /* 紅色刪除 */
+    color: white;
+}
+
+/* 新增/編輯表單樣式 */
+.edit-form {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px dashed var(--accent-color);
+    border-radius: 8px;
+    background-color: #1a1a1a;
+}
+.edit-form h3 { color: var(--accent-color); margin-top: 0; }
+
+#editUrlForm label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    color: var(--text-color-light);
+}
+
 #editUrlForm input { 
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
     border: 1px solid var(--accent-color); 
+    border-radius: 4px;
+    box-sizing: border-box;
     background-color: #000;
     color: var(--text-color-light);
 }
@@ -211,5 +277,14 @@ hr {
     color: white;
     box-shadow: 0 3px 0 #1e7e34;
     transform: translateY(-2px);
+    margin-right: 10px;
 }
 #editUrlForm button[type="submit"]:hover { background-color: #1e7e34; box-shadow: 0 1px 0 #1e7e34; transform: translateY(0);}
+
+#editUrlForm button[type="button"] {
+    background-color: #6c757d; 
+    color: var(--text-color-light);
+    border-radius: 5px;
+    border: none;
+    padding: 10px 20px;
+}
