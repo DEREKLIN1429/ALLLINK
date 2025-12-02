@@ -14,32 +14,57 @@
             <label for="userID">輸入您的 ID：</label>
             <input type="text" id="userID" placeholder="請輸入 ID">
             <button id="confirmBtn" onclick="checkID()">確認</button>
+            
+            <button id="settingsBtn" onclick="showPasswordPrompt()">設定</button>
         </div>
 
         <hr>
+        
+        <div class="settings-section" id="settingsPanel" style="display: none;">
+            <h2>⚙️ 網址連結設定</h2>
+            <form id="urlSettingForm">
+                <label>Machine-NG 網址:</label>
+                <input type="url" id="url-machine-ng" placeholder="https://..." required><br>
+
+                <label>5S audit 網址:</label>
+                <input type="url" id="url-5s-audit" placeholder="https://..." required><br>
+                
+                <label>機械維修紀錄 網址:</label>
+                <input type="url" id="url-maintenance-record" placeholder="https://..." required><br>
+
+                <label>機械查核保養 網址:</label>
+                <input type="url" id="url-check-maintain" placeholder="https://..." required><br>
+
+                <label>RM Warehouse 網址:</label>
+                <input type="url" id="url-rm-warehouse" placeholder="https://..." required><br>
+                
+                <button type="submit">儲存設定</button>
+                <button type="button" onclick="closeSettings()">取消/返回</button>
+            </form>
+        </div>
 
         <div class="button-grid" id="mainFeatures" style="display: none;">
-            <button class="icon-btn" id="btn-machine-ng" data-url="https://your.machine.ng.link">
+            <button class="icon-btn" id="btn-machine-ng" data-key="machine-ng">
                 <img src="placeholder_machine_ng.png" alt="Machine-NG" class="btn-icon">
                 <span>Machine-NG</span>
             </button>
 
-            <button class="icon-btn" id="btn-5s-audit" data-url="https://your.5s.audit.link">
+            <button class="icon-btn" id="btn-5s-audit" data-key="5s-audit">
                 <img src="placeholder_5s_audit.png" alt="5S audit" class="btn-icon">
                 <span>5S audit</span>
             </button>
             
-            <button class="icon-btn" id="btn-maintenance-record" data-url="https://your.maintenance.record.link">
+            <button class="icon-btn" id="btn-maintenance-record" data-key="maintenance-record">
                 <img src="placeholder_record.png" alt="機械維修紀錄" class="btn-icon">
                 <span>機械維修紀錄</span>
             </button>
 
-            <button class="icon-btn" id="btn-check-maintain" data-url="https://your.check.maintain.link">
+            <button class="icon-btn" id="btn-check-maintain" data-key="check-maintain">
                 <img src="placeholder_check.png" alt="機械查核保養" class="btn-icon">
                 <span>機械查核保養</span>
             </button>
 
-            <button class="icon-btn" id="btn-rm-warehouse" data-url="https://your.rm.warehouse.link">
+            <button class="icon-btn" id="btn-rm-warehouse" data-key="rm-warehouse">
                 <img src="placeholder_rm_warehouse.png" alt="RM Warehouse" class="btn-icon">
                 <span>RM Warehouse</span>
             </button>
