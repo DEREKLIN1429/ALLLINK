@@ -63,17 +63,20 @@
             <span class="close-btn" onclick="hideAddForm()">&times;</span>
             <form id="editUrlForm" class="edit-form">
                 <input type="hidden" id="edit-id">
-                <h3><span id="modalTitle">新增/修改連結 | Add/Edit Link</span></h3>
                 
-                <label for="edit-name">按鈕名稱 (作為連結描述) | Button Name:</label>
-                <input type="text" id="edit-name" required placeholder="例如：Machine-NG 報修"><br>
-
-                <label for="edit-url">網址連結 | URL Link:</label>
-                <input type="url" id="edit-url" required placeholder="https://your.link.com/page"><br>
-
-                <label for="edit-icon">圖示 (Font Awesome Icon Class) | Icon Class:</label>
-                <select id="edit-icon"></select><br>
+                <h3><span id="modalTitle">新增/修改連結 | Add/Edit Link</span></h3> 
                 
+                <div class="input-grid">
+                    <label for="edit-name">按鈕名稱 (作為連結描述) | Button Name:</label>
+                    <input type="text" id="edit-name" required placeholder="例如：Machine-NG 報修"><br>
+
+                    <label for="edit-url">網址連結 | URL Link:</label>
+                    <input type="url" id="edit-url" required placeholder="https://your.link.com/page"><br>
+
+                    <label for="edit-icon">圖示 (Font Awesome Icon Class) | Icon Class:</label>
+                    <select id="edit-icon"></select><br>
+                </div>
+
                 <div class="modal-actions">
                     <button type="submit" class="modal-save-btn">儲存 | Save</button>
                     <button type="button" class="modal-cancel-btn" onclick="hideAddForm()">取消 | Cancel</button>
