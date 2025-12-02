@@ -1,16 +1,19 @@
 // =======================================================
-// 全域變數/常數 (保持不變)
+// 全域變數/常數
 // =======================================================
 
+// 標題常數 (保持不變)
 const TITLE_LOGIN = '生產智能系統彙整 登入 | Production Intelligence System Login';
 const TITLE_USER_MODE = '生產智能系統彙整 | Production Intelligence System Integration';
 const TITLE_ADMIN_MODE = '🛠️ 工作站功能選單 | Workstation Features Menu';
 
-const ADMIN_PASSWORD = 'ADMIN'; 
+// 登入/設定常數
+const ADMIN_PASSWORD = '12345'; // 修正：管理密碼為 12345
 const STORAGE_KEY = 'factory_links_data';
 let currentLinks = []; 
 let currentMode = 'GUEST'; 
 
+// 常用的 Font Awesome 圖示清單 (保持不變)
 const ICON_OPTIONS = [
     { class: 'fas fa-link', name: '預設/連結 (Link)' },
     { class: 'fas fa-exclamation-triangle', name: '警示/報修 (Warning)' },
@@ -23,18 +26,18 @@ const ICON_OPTIONS = [
     { class: 'fas fa-users', name: '人員/團隊 (Users)' },
 ];
 
+// 修正：預設連結清單使用您提供的最新網址
 const DEFAULT_LINKS = [
-    { id: 1, name: 'Machine-NG 報修', url: 'https://demo.machine.ng', icon: 'fas fa-exclamation-triangle' },
-    { id: 2, name: '5S Audit 表單', url: 'https://demo.5s.audit', icon: 'fas fa-clipboard-check' },
-    { id: 3, name: '機械維修紀錄', url: 'https://demo.maintenance.record', icon: 'fas fa-tools' },
-    { id: 4, name: '機械查核保養', url: 'https://demo.check.maintain', icon: 'fas fa-calendar-alt' },
-    { id: 5, name: 'RM Warehouse 庫存', url: 'https://demo.rm.warehouse', icon: 'fas fa-warehouse' }
+    { id: 1, name: 'Machine-NG 報修', url: 'https://dereklin1429.github.io/Machine-NG/', icon: 'fas fa-exclamation-triangle' },
+    { id: 2, name: '5S Audit 表單', url: 'https://dereklin1429.github.io/5S-audit/', icon: 'fas fa-clipboard-check' },
+    { id: 3, name: '機械維修紀錄', url: 'https://dereklin1429.github.io/repair-history/', icon: 'fas fa-tools' },
+    { id: 4, name: '機械查核保養', url: 'https://dereklin1429.github.io/-MC-maintenance-check/', icon: 'fas fa-calendar-alt' },
+    { id: 5, name: 'RM Warehouse 庫存', url: 'https://chiehs1429.github.io/RM-Warehouse/', icon: 'fas fa-warehouse' }
 ];
 
 // =======================================================
 // 函數：標題控制 (保持不變)
 // =======================================================
-
 function setTitles(mode) {
     const header = document.getElementById('mainHeader');
     const pageTitle = document.getElementById('pageTitle');
@@ -56,9 +59,8 @@ function setTitles(mode) {
 }
 
 // =======================================================
-// 函數：CRUD / 渲染 (為節省篇幅，此處邏輯不變，請使用您最新的程式碼)
+// 函數：CRUD / 渲染 (保持邏輯一致性)
 // =======================================================
-
 function loadLinks() {
     const data = localStorage.getItem(STORAGE_KEY);
     if (data) {
@@ -94,6 +96,7 @@ function renderUserButtons() {
             <span>${link.name}</span>
         `;
         
+        // 點擊事件：允許修改網址
         button.addEventListener('click', () => {
              promptForNewUrl(link);
         });
@@ -133,7 +136,7 @@ function promptForNewUrl(link) {
         alert('網址輸入無效，請重新嘗試。');
     }
 }
-
+// (populateIconSelect, renderSettingsList, CRUD 相關函數邏輯與上個版本保持一致，確保功能正確)
 function populateIconSelect(selectedValue = '') {
     const select = document.getElementById('edit-icon');
     select.innerHTML = ''; 
@@ -244,10 +247,8 @@ function deleteLink(id) {
         alert(`連結 ${link.name} 已刪除。`);
     }
 }
-
-
 // =======================================================
-// 函數：模式切換 (登入/登出) - 修正顯示邏輯
+// 函數：模式切換 (登入/登出) - 修正邏輯
 // =======================================================
 
 function initPage() {
@@ -256,16 +257,20 @@ function initPage() {
     setTitles('GUEST');
     
     // 初始狀態只顯示大按鈕選擇區 (GUEST 模式)
-    document.getElementById('modeSelectSection').style.display = 'grid'; // 確保 GUEST 畫面顯示
+    document.getElementById('modeSelectSection').style.display = 'grid'; 
     document.getElementById('mainFeatures').style.display = 'none';
     document.getElementById('settingsPanel').style.display = 'none';
     document.getElementById('logoutSection').style.display = 'none';
     document.getElementById('hrDivider').style.display = 'none';
 }
 
+/**
+ * 處理管理設定模式進入。
+ */
 function showAdminPrompt() {
     const password = prompt("請輸入管理員密碼 (Enter Admin Password)：");
 
+    // 修正：確保密碼正確時能進入設定
     if (password === ADMIN_PASSWORD) {
         enterSettingsMode();
     } else if (password !== null) {
@@ -275,7 +280,7 @@ function showAdminPrompt() {
 
 function exitAdminView() {
     // 退出管理員設定模式，回到 GUEST 狀態
-    handleLogout(); // 呼叫登出，因為登出會將狀態重置為 GUEST
+    handleLogout(); // 呼叫登出，將狀態重置為 GUEST
     alert('已退出管理員設定畫面 (Exited Admin Setup View)。');
 }
 
@@ -285,7 +290,7 @@ function handleLogout() {
     currentMode = 'GUEST';
     setTitles('GUEST');
     
-    document.getElementById('modeSelectSection').style.display = 'grid'; // GUEST 畫面顯示
+    document.getElementById('modeSelectSection').style.display = 'grid'; 
     document.getElementById('logoutSection').style.display = 'none';
     document.getElementById('mainFeatures').style.display = 'none';
     document.getElementById('settingsPanel').style.display = 'none';
@@ -302,7 +307,7 @@ function enterSettingsMode() {
     document.getElementById('modeSelectSection').style.display = 'none';
     document.getElementById('logoutSection').style.display = 'none'; 
     document.getElementById('mainFeatures').style.display = 'none';
-    document.getElementById('settingsPanel').style.display = 'block'; // 設定畫面顯示
+    document.getElementById('settingsPanel').style.display = 'block'; 
     document.getElementById('hrDivider').style.display = 'block'; 
     
     renderSettingsList(); 
@@ -317,7 +322,7 @@ function enterUserMode(userID) {
     
     document.getElementById('modeSelectSection').style.display = 'none';
     document.getElementById('logoutSection').style.display = 'flex';
-    document.getElementById('mainFeatures').style.display = 'grid'; // 使用者按鈕畫面顯示
+    document.getElementById('mainFeatures').style.display = 'grid'; // 修正：確保使用者按鈕畫面顯示
     document.getElementById('settingsPanel').style.display = 'none';
     document.getElementById('hrDivider').style.display = 'block'; 
     
