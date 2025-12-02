@@ -27,7 +27,6 @@ const ICON_OPTIONS = [
     { class: 'fas fa-cut', name: 'Cutting (Scissors)' },
 ];
 
-// 最新連結與中英文標題
 const DEFAULT_LINKS = [
     { id: 1, name: 'Machine-NG\n機械故障', url: 'https://dereklin1429.github.io/Machine-NG/', icon: 'fas fa-exclamation-triangle' },
     { id: 2, name: '5S Audit\n5S 查核', url: 'https://dereklin1429.github.io/5S-audit/', icon: 'fas fa-clipboard-check' },
@@ -179,7 +178,7 @@ function showAddForm(id = null) {
     const urlInput = document.getElementById('edit-url');
     let selectedIconClass = '';
     
-    // 修正: 使用 flex 啟用 CSS 的 Flexbox 居中
+    // 修正: 顯示時設為 flex
     modal.style.display = 'flex'; 
 
     if (id !== null) {
@@ -349,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.onclick = function(event) {
       const modal = document.getElementById('editModal');
       // 確保 Modal 隱藏時，點擊外部區域也能將其關閉
-      if (modal.style.display === 'flex' && !document.getElementById('modal-content').contains(event.target)) {
+      if (modal.style.display === 'flex' && event.target === modal) {
         modal.style.display = "none";
       }
     }
