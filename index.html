@@ -12,9 +12,11 @@
         <h1>🛠️ 工作站功能選單</h1>
 
         <div class="mode-selection-section">
-            <label for="passwordInput">請輸入密碼：</label>
-            <input type="password" id="passwordInput" placeholder="輸入 ID 或管理密碼">
+            <label for="passwordInput">請輸入 ID：</label>
+            <input type="text" id="passwordInput" placeholder="輸入您的 ID">
             <button id="loginBtn" onclick="handleLogin()">登入</button>
+            
+            <button id="adminSetupBtn" onclick="showAdminPrompt()">⚙️ 管理設定</button>
         </div>
 
         <hr>
@@ -33,6 +35,7 @@
             <form id="editUrlForm" class="edit-form" style="display: none;">
                 <input type="hidden" id="edit-id">
                 <h3>新增/修改連結</h3>
+                
                 <label for="edit-name">按鈕名稱 (作為連結描述):</label>
                 <input type="text" id="edit-name" required placeholder="例如：Machine-NG 報修"><br>
 
