@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工作站功能介面</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🛠️ 工作站功能選單</h1>
+
+        <div class="id-input-section">
+            <label for="userID">輸入您的 ID：</label>
+            <input type="text" id="userID" placeholder="請輸入 ID">
+            <button id="confirmBtn" onclick="checkID()">確認</button>
+        </div>
+
+        <hr>
+
+        <div class="button-grid" id="mainFeatures" style="display: none;">
+            <button class="icon-btn" id="btn-machine-ng" data-url="https://your.machine.ng.link">
+                <img src="placeholder_machine_ng.png" alt="Machine-NG" class="btn-icon">
+                <span>Machine-NG</span>
+            </button>
+
+            <button class="icon-btn" id="btn-5s-audit" data-url="https://your.5s.audit.link">
+                <img src="placeholder_5s_audit.png" alt="5S audit" class="btn-icon">
+                <span>5S audit</span>
+            </button>
+            
+            <button class="icon-btn" id="btn-maintenance-record" data-url="https://your.maintenance.record.link">
+                <img src="placeholder_record.png" alt="機械維修紀錄" class="btn-icon">
+                <span>機械維修紀錄</span>
+            </button>
+
+            <button class="icon-btn" id="btn-check-maintain" data-url="https://your.check.maintain.link">
+                <img src="placeholder_check.png" alt="機械查核保養" class="btn-icon">
+                <span>機械查核保養</span>
+            </button>
+
+            <button class="icon-btn" id="btn-rm-warehouse" data-url="https://your.rm.warehouse.link">
+                <img src="placeholder_rm_warehouse.png" alt="RM Warehouse" class="btn-icon">
+                <span>RM Warehouse</span>
+            </button>
+        </div>
+        
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
