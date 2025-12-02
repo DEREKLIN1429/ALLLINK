@@ -7,7 +7,7 @@ const TITLE_ADMIN_MODE = '🛠️ 工作站功能選單 | Workstation Features M
 
 const ADMIN_PASSWORD = '12345'; 
 const STORAGE_KEY = 'factory_links_data';
-const USER_ID_KEY = 'current_user_id'; // 移除 ID 登入功能，但保留 KEY 以防誤讀
+const USER_ID_KEY = 'current_user_id'; 
 let currentLinks = []; 
 let currentMode = 'GUEST'; 
 let currentUserID = ''; 
@@ -27,17 +27,17 @@ const ICON_OPTIONS = [
     { class: 'fas fa-cut', name: 'Cutting (Scissors)' },
 ];
 
+// 修正：DEFAULT_LINKS 使用最新的標題和網址
 const DEFAULT_LINKS = [
     { id: 1, name: 'Machine-NG\n機械故障', url: 'https://dereklin1429.github.io/Machine-NG/', icon: 'fas fa-exclamation-triangle' },
     { id: 2, name: '5S Audit\n5S 查核', url: 'https://dereklin1429.github.io/5S-audit/', icon: 'fas fa-clipboard-check' },
-    { id: 3, name: 'Maintenance Record\n機械維修紀錄', url: 'https://dereklin1429.github.io/repair-history/', icon: 'fas fa-tools' },
+    { id: 3, name: 'Repair Record\n機械維修紀錄', url: 'https://dereklin1429.github.io/repair-history/', icon: 'fas fa-tools' },
     { id: 4, name: 'Machinery Upkeep\n機械查核保養', url: 'https://dereklin1429.github.io/-MC-maintenance-check/', icon: 'fas fa-calendar-alt' },
     { id: 5, name: 'RM Warehouse\n原管倉庫', url: 'https://chiehs1429.github.io/RM-Warehouse/', icon: 'fas fa-warehouse' },
-    { id: 6, name: 'Extrusion-Inventory', url: 'https://chiehs1429.github.io/Extrusion_app/', icon: 'fas fa-chart-bar' },
-    { id: 7, name: 'Mixing\n混練工程', url: 'https://chiehs1429.github.io/Mixing/', icon: 'fas fa-cogs' },
-    { id: 8, name: 'Extrusion\n押出工程', url: 'https://chiehs1429.github.io/Extrusion_app/', icon: 'fas fa-cogs' },
-    { id: 9, name: 'Calendering\n上膠工程', url: 'https://chiehs1429.github.io/Calendering/', icon: 'fas fa-compress-arrows-alt' },
-    { id: 10, name: 'CUTTING\n裁斷工程', url: 'https://chiehs1429.github.io/CUTTING-Inventory/', icon: 'fas fa-cut' }
+    { id: 6, name: 'Mixing\n混練工程', url: 'https://chiehs1429.github.io/Mixing/', icon: 'fas fa-cogs' },
+    { id: 7, name: 'Extrusion\n押出工程', url: 'https://chiehs1429.github.io/Extrusion_app/', icon: 'fas fa-cogs' },
+    { id: 8, name: 'Calendering\n上膠工程', url: 'https://chiehs1429.github.io/Calendering/', icon: 'fas fa-compress-arrows-alt' },
+    { id: 9, name: 'CUTTING\n裁斷工程', url: 'https://chiehs1429.github.io/CUTTING-Inventory/', icon: 'fas fa-cut' },
 ];
 
 // =======================================================
@@ -70,13 +70,11 @@ function loadLinks() {
     } else {
         currentLinks = DEFAULT_LINKS;
     }
-    // 移除 ID 相關讀取，因為功能已移除
-    // currentUserID = localStorage.getItem(USER_ID_KEY) || ''; 
+    currentUserID = localStorage.getItem(USER_ID_KEY) || '';
 }
 
 function saveLinks() {
-    // 移除 ID 儲存，因為功能已移除
-    // localStorage.setItem(USER_ID_KEY, currentUserID); 
+    localStorage.setItem(USER_ID_KEY, currentUserID); 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(currentLinks));
 }
 
@@ -258,7 +256,7 @@ function initPage() {
     renderUserButtons();
     setTitles('GUEST');
     
-    // 移除 ID 輸入欄位的預填邏輯
+    // 由於 ID 登入已移除，這部分邏輯不再需要
     // const userIDInput = document.getElementById('userIDInput');
     // if (currentUserID) {
     //     userIDInput.value = currentUserID;
@@ -271,21 +269,10 @@ function initPage() {
     document.getElementById('hrDivider').style.display = 'none';
 }
 
-/* 移除 handleLogin 函數，功能被 enterUserMode 吸收 */
-/*
 function handleLogin() {
-    const userIDInput = document.getElementById('userIDInput');
-    const inputID = userIDInput.value.trim();
-
-    if (inputID !== '') {
-        currentUserID = inputID;
-        localStorage.setItem(USER_ID_KEY, inputID); 
-        enterUserMode(inputID);
-    } else {
-        alert('請輸入您的 ID (Please enter your ID)。');
-    }
+    // 此函數在移除 ID 登入後已無用，但如果 HTML 仍有調用，則執行進入 USER 模式
+    enterUserMode('訪客');
 }
-*/
 
 function showAdminPrompt() {
     const password = prompt("請輸入管理員密碼 (Enter Admin Password)：");
@@ -298,13 +285,13 @@ function showAdminPrompt() {
 }
 
 function exitAdminView() {
-    // Admin 退出時，回到 GUEST 模式，不清除數據
+    // 從 Admin 退出時，回到 GUEST 模式 (首頁)
     handleLogout(false); 
     alert('已退出管理員設定畫面 (Exited Admin Setup View)。');
 }
 
 function handleLogout(clearID = false) { 
-    // 修正: 由於 ID 登入已移除，此函數用於模式重置
+    // 修正：登出後回到 GUEST 首頁
     if (clearID) {
         localStorage.removeItem(USER_ID_KEY);
         currentUserID = '';
@@ -313,14 +300,14 @@ function handleLogout(clearID = false) {
     currentMode = 'GUEST';
     setTitles('GUEST');
     
-    // 移除 ID 輸入欄位的值設定，因為 ID 輸入欄位已被移除 (或不再是登入的主要方式)
-    // document.getElementById('userIDInput').value = ''; 
-
+    // 顯示首頁元素
     document.getElementById('modeSelectSection').style.display = 'grid'; 
     document.getElementById('logoutSection').style.display = 'none';
     document.getElementById('mainFeatures').style.display = 'none';
     document.getElementById('settingsPanel').style.display = 'none';
     document.getElementById('hrDivider').style.display = 'none';
+    
+    // 由於 ID 登入已移除，無需設置 userIDInput 的值
 }
 
 function enterSettingsMode() {
@@ -337,8 +324,6 @@ function enterSettingsMode() {
 }
 
 function enterUserMode(userID) {
-    // 修正: 由於 ID 登入已移除，這裡將 userID 預設為 '訪客'
-    const actualUserID = userID || '訪客';
     currentMode = 'USER';
     setTitles('USER');
     
@@ -348,6 +333,8 @@ function enterUserMode(userID) {
     document.getElementById('settingsPanel').style.display = 'none';
     document.getElementById('hrDivider').style.display = 'block'; 
     
+    // 修正：因為 ID 登入已移除，這裡顯示預設的 '訪客' 
+    const actualUserID = userID || '訪客';
     document.getElementById('welcomeMessage').textContent = `歡迎, ${actualUserID} (Welcome, ${actualUserID})`;
 }
 
