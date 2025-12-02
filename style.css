@@ -184,6 +184,14 @@ body {
 }
 
 /* -------------------- ADMIN 頁面清單 (大按鈕模式美化) -------------------- */
+.settings-section {
+    box-shadow: 0 0 15px rgba(40, 167, 69, 0.5);
+}
+.admin-button-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 20px 0;
+}
 .admin-item-btn {
     /* 修正: 確保在黑底上文字可見 */
     color: var(--text-color-light); 
@@ -192,6 +200,12 @@ body {
     box-shadow: 0 4px 0 var(--primary-color); 
     transform: translateY(-2px);
     cursor: pointer;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px; 
+    border-radius: 10px;
 }
 .admin-item-btn:hover {
     transform: translateY(0);
@@ -235,6 +249,14 @@ body {
 /* -------------------- Modal 內大按鈕優化 - 修正手機超出 -------------------- */
 .modal {
     z-index: 9999; 
+    display: none; 
+    position: fixed; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.8);
 }
 .modal-content {
     background-color: #111111;
@@ -242,6 +264,9 @@ body {
     width: 90%; 
     max-width: 450px; 
     padding: 20px; 
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(40, 167, 69, 0.8);
+    position: relative;
 }
 
 .modal-content label, 
