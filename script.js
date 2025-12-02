@@ -74,6 +74,7 @@ function loadLinks() {
 }
 
 function saveLinks() {
+    localStorage.setItem(USER_ID_KEY, currentUserID); // 確保每次儲存連結時也更新 ID
     localStorage.setItem(STORAGE_KEY, JSON.stringify(currentLinks));
 }
 
@@ -103,7 +104,6 @@ function renderUserButtons() {
             <span>${link.name}</span>
         `;
         
-        // 使用者模式點擊後直接連結
         button.addEventListener('click', () => {
              if (link.url) {
                 window.open(link.url, '_blank');
