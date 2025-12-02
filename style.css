@@ -1,99 +1,229 @@
-/* -------------------- 登入控制區優化 -------------------- */
-.login-controls {
-    grid-column: 1 / span 2; /* 佔據兩欄 */
+:root {
+    --primary-color: #FF8C00; /* 主橘色 */
+    --secondary-color: #000000; /* 主黑色/背景色 */
+    --accent-color: #28A745; /* 輔助綠色 */
+    --text-color-light: #f5f5f5; /* 淺色文字 */
+    --text-color-dark: #cccccc; /* 深色文字 */
+    --button-bg: #333333; /* 按鈕背景 */
+    --hover-shadow: rgba(255, 140, 0, 0.7);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a); /* 漸變背景 */
+    color: var(--text-color-light);
+}
+
+.container {
+    background-color: var(--secondary-color); /* 黑色主體 */
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px var(--hover-shadow);
+    width: 90%;
+    max-width: 900px; 
+    text-align: center;
+    border: 1px solid var(--primary-color);
+}
+
+/* 標題與作者資訊 */
+.header-container {
+    display: flex;
+    justify-content: space-between; 
+    align-items: flex-end; 
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--primary-color);
+}
+.header-container h1 {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    color: var(--primary-color);
+    text-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
+}
+.author-info-header {
+    font-size: 0.9em;
+    color: var(--text-color-dark);
+    white-space: nowrap; 
+}
+
+/* -------------------- GUEST 模式大按鈕 -------------------- */
+.mode-buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 30px;
+    padding: 40px 0;
+}
+
+.mode-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    aspect-ratio: 1 / 1; 
     padding: 30px;
-    background-color: var(--button-bg);
     border-radius: 15px;
-    border: 1px solid #444;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 8px 0 rgba(0, 0, 0, 0.4); 
+    transform: translateY(-4px);
+}
+.mode-btn i { margin-bottom: 15px; }
+
+.mode-btn:hover {
+    transform: translateY(0); 
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.4);
 }
 
-.login-controls label {
-    font-size: 1.1em;
-    margin-bottom: 10px;
-    color: var(--text-color-light);
-}
-
-#userIDInput {
-    padding: 10px;
-    border: 2px solid var(--primary-color);
-    border-radius: 6px;
-    font-size: 18px;
-    background-color: #111;
-    color: var(--text-color-light);
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
-    margin-bottom: 20px;
-    width: 80%;
-    max-width: 300px;
-}
-
+/* 登入按鈕 (橘色漸層) */
 .mode-btn-login {
-    width: 80%;
-    max-width: 300px;
     background: linear-gradient(145deg, var(--primary-color), #cc7000);
     color: var(--secondary-color);
     box-shadow: 0 4px 0 #cc7000;
+    font-size: 1.5em; 
 }
-.mode-btn-login:hover {
-    box-shadow: 0 2px 0 #cc7000;
+.mode-btn-login:hover { box-shadow: 0 2px 0 #cc7000; }
+
+/* 管理設定 (綠色漸層) */
+.mode-btn-admin {
+    background: linear-gradient(145deg, var(--accent-color), #1e7e34);
+    border: 3px solid #7cd69c;
+    box-shadow: 0 8px 0 #1e7e34;
 }
-/* 將原本的 .mode-btn-user 樣式應用到 .mode-btn-login 上 */
-/* (原有的 .mode-btn-user 已不再使用，但保留以防萬一) */
+.mode-btn-admin:hover { transform: translateY(0); box-shadow: 0 4px 0 #1e7e34; }
 
-
-/* -------------------- Modal 內大按鈕樣式 -------------------- */
-
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 15px;
-    margin-top: 25px;
+/* 退出 (黑色/深灰) */
+.mode-btn-exit {
+    background: linear-gradient(145deg, var(--button-bg), #111);
+    border: 3px solid #555;
+    box-shadow: 0 8px 0 #111;
 }
+.mode-btn-exit:hover { transform: translateY(0); box-shadow: 0 4px 0 #111; }
 
-.modal-actions button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.3);
-    transform: translateY(-2px);
+/* ID 輸入區樣式 */
+.login-controls {
+    grid-column: 1 / span 2; 
+    background: linear-gradient(145deg, #111, #333); /* 略淺黑背景 */
+    border: 1px solid var(--primary-color);
 }
-
-.modal-save-btn {
-    background-color: var(--accent-color); /* 綠色儲存 */
-    color: white;
-    box-shadow: 0 4px 0 #1e7e34;
-}
-.modal-save-btn:hover {
-    transform: translateY(0);
-    box-shadow: 0 2px 0 #1e7e34;
+#userIDInput {
+    border: 2px solid var(--primary-color);
+    background-color: #000;
 }
 
-.modal-cancel-btn {
-    background-color: #6c757d; /* 灰色取消 */
-    color: white;
-    box-shadow: 0 4px 0 #5a6268;
+/* -------------------- USER 功能按鈕優化 (維持正方形大按鈕) -------------------- */
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    padding-top: 30px;
 }
-.modal-cancel-btn:hover {
-    transform: translateY(0);
-    box-shadow: 0 2px 0 #5a6268;
-}
-
-/* -------------------- 使用者/功能選單按鈕優化為大按鈕風格 -------------------- */
-/* 讓功能按鈕看起來更像大按鈕 */
 .icon-btn {
-    /* 保持原有的立體化、正方形、黑橘綠配色 */
-    padding: 30px 15px; 
-    border-radius: 15px;
+    /* 橘/綠/黑 混合漸層 */
+    background: linear-gradient(45deg, #111, var(--button-bg), var(--primary-color) 70%); 
     box-shadow: 0 6px 0 var(--accent-color); 
     transform: translateY(-2px);
+    border: 1px solid var(--text-color-dark);
 }
 .icon-btn:hover {
+    background: linear-gradient(45deg, #111, var(--button-bg), var(--primary-color) 90%); 
     transform: translateY(0);
     box-shadow: 0 3px 0 var(--accent-color);
+    border-color: var(--primary-color);
+}
+.btn-icon-fa {
+    color: var(--accent-color); /* 圖示改為綠色 */
+}
+
+/* -------------------- ADMIN 頁面清單 (大按鈕模式) -------------------- */
+.settings-section {
+    box-shadow: 0 0 15px rgba(40, 167, 69, 0.5);
+}
+.admin-button-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.admin-item-btn {
+    background: linear-gradient(135deg, #222, #000); /* 黑色主體 */
+    border: 2px solid var(--accent-color); /* 綠色邊框 */
+    box-shadow: 0 4px 0 var(--primary-color); /* 橘色立體底座 */
+    transform: translateY(-2px);
+    cursor: pointer;
+    transition: all 0.2s;
+    aspect-ratio: 1 / 1; /* 正方形 */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.admin-item-btn:hover {
+    transform: translateY(0);
+    box-shadow: 0 2px 0 var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.item-name {
+    color: var(--primary-color);
+    font-size: 1.1em;
+}
+.item-url {
+    color: var(--text-color-dark);
+    font-size: 0.8em;
+}
+
+/* 編輯/刪除按鈕組件 */
+.admin-item-actions {
+    margin-top: auto; /* 將按鈕推到底部 */
+    padding-top: 10px;
+}
+.admin-item-actions button {
+    padding: 8px 12px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    transition: all 0.2s;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.admin-item-actions .edit-btn {
+    background-color: var(--accent-color); /* 綠色編輯 */
+    color: white;
+}
+.admin-item-actions .delete-btn {
+    background-color: #dc3545; /* 紅色刪除 */
+    color: white;
+}
+.admin-item-actions button:hover {
+    opacity: 0.8;
+}
+
+/* -------------------- Modal 內大按鈕優化 -------------------- */
+.modal-actions {
+    gap: 20px;
+}
+.modal-actions button {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+}
+.modal-actions button:hover {
+    transform: translateY(0);
+}
+.modal-save-btn {
+    background-color: var(--accent-color); 
+    box-shadow: 0 4px 0 #1e7e34;
+}
+.modal-cancel-btn {
+    background-color: var(--primary-color); /* 取消改用橘色 */
+    color: var(--secondary-color);
+    box-shadow: 0 4px 0 #cc7000;
 }
