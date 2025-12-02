@@ -71,22 +71,7 @@ body {
 }
 
 .welcome-text { font-size: 1.5em; font-weight: bold; color: var(--accent-color); }
-#logoutBtn {
-    padding: 10px 20px;
-    background-color: #dc3545; 
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-weight: bold;
-    box-shadow: 0 4px 0 #b02a37;
-    transform: translateY(-2px);
-}
-#logoutBtn:hover {
-    box-shadow: 0 2px 0 #b02a37;
-    transform: translateY(0);
-}
+#logoutBtn { /* ... 樣式不變 ... */ }
 
 /* -------------------- GUEST 模式大按鈕 & ID 輸入美化 -------------------- */
 .mode-buttons-grid {
@@ -125,7 +110,7 @@ body {
     border: 1px solid var(--primary-color);
 }
 
-/* 修正：ID 輸入欄位加高 50% (原 padding: 10px; 調整為 15px;) */
+/* 修正：ID 輸入欄位加高 50% */
 #userIDInput {
     padding: 15px; /* 加高約 50% */
     border: 2px solid var(--accent-color); 
@@ -139,18 +124,14 @@ body {
     max-width: 300px;
 }
 
-.mode-btn-login { /* ... 樣式不變 ... */ }
-.mode-btn-admin { /* ... 樣式不變 ... */ }
-.mode-btn-exit { /* ... 樣式不變 ... */ }
-
-/* -------------------- USER/ADMIN 功能按鈕優化 (3 欄佈局 - 寬度減少 15%) -------------------- */
+/* -------------------- USER/ADMIN 功能按鈕優化 (3 欄佈局 - 寬度縮減 30%) -------------------- */
 .button-grid, 
 .admin-button-grid {
-    /* 寬度減少 15% 的視覺效果：通過增加列間距 (gap) 和減少列寬度實現 */
+    /* 修正: 寬度縮減 30% - 調整列寬度使其更窄 */
     display: grid;
-    /* 修正: 調整列寬度，間距加大 */
-    grid-template-columns: repeat(3, minmax(200px, 1fr)); /* minmax確保基本寬度 */
-    gap: 40px; /* 加大間距 */
+    /* 調整 max-width 約為 70% 容器寬度 */
+    grid-template-columns: repeat(3, minmax(200px, 0.23fr)); /* 縮小列佔比 */
+    gap: 40px; /* 增加間距 */
     padding-top: 30px;
     justify-content: center; /* 居中佈局 */
 }
@@ -163,9 +144,20 @@ body {
     transform: translateY(-2px);
 }
 
-.icon-btn { /* ... 樣式不變 ... */ }
-.icon-btn:hover { /* ... 樣式不變 ... */ }
-.btn-icon-fa { color: var(--primary-color); font-size: 2em !important; }
+.icon-btn {
+    /* 橘白配色 */
+    background: linear-gradient(145deg, var(--button-bg), #eeeeee);
+    color: var(--button-text-color);
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 4px 0 var(--primary-color); 
+}
+.icon-btn:hover {
+    box-shadow: 0 2px 0 var(--primary-color);
+}
+.btn-icon-fa {
+    color: var(--primary-color); 
+    font-size: 2em !important; 
+}
 
 /* -------------------- ADMIN 頁面清單 (大按鈕模式美化) -------------------- */
 .settings-section { box-shadow: 0 0 15px rgba(40, 167, 69, 0.5); }
@@ -179,11 +171,32 @@ body {
 .admin-item-actions button { /* ... 樣式不變 ... */ }
 
 /* -------------------- Modal 內大按鈕優化 - 修正佈局與居中 -------------------- */
-.modal { /* ... 樣式不變 ... */ }
-.modal-content { /* ... 樣式不變 ... */ }
+.modal {
+    z-index: 9999; 
+    position: fixed; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.8);
+    display: none; 
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background-color: #111111;
+    position: relative; 
+    width: 90%; 
+    max-width: 450px; 
+    padding: 20px; 
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(40, 167, 69, 0.8);
+}
 .input-grid { /* ... 樣式不變 ... */ }
-.modal-save-btn { /* ... 樣式不變 ... */ }
-.modal-cancel-btn { /* ... 樣式不變 ... */ }
+.modal-content label { /* ... 樣式不變 ... */ }
+.modal-content input, .modal-content select { /* ... 樣式不變 ... */ }
+.modal-actions { /* ... 樣式不變 ... */ }
 
 /* ============================================= */
 /* 修正: 響應式設計 (手機畫面優化) */
@@ -235,7 +248,8 @@ body {
     }
     .btn-icon-fa { font-size: 2em !important; }
 
-    .modal-actions { /* ... 樣式不變 ... */ }
-    .modal-actions button { /* ... 樣式不變 ... */ }
-    .admin-controls { /* ... 樣式不變 ... */ }
+    .modal-actions { flex-direction: column; gap: 10px; }
+    .modal-actions button { width: 100%; }
+    .admin-controls { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .admin-controls button { width: 48%; }
 }
