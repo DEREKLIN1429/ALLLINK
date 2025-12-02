@@ -1,6 +1,7 @@
 /* -------------------- ADMIN 頁面清單 (大按鈕模式美化) -------------------- */
 .admin-button-grid {
     /* 確保 3 欄佈局 */
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     padding: 20px 0;
@@ -12,11 +13,13 @@
     box-shadow: 0 4px 0 var(--primary-color); 
     transform: translateY(-2px);
     cursor: pointer;
-    /* 保持正方形 */
-    aspect-ratio: 1 / 1;
+    /* 確保為正方形 */
+    aspect-ratio: 1 / 1; 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: 15px; /* 增加內邊距 */
+    border-radius: 10px;
 }
 .admin-item-btn:hover {
     transform: translateY(0);
@@ -24,42 +27,16 @@
     border-color: var(--primary-color);
 }
 .item-name {
-    color: var(--primary-color);
+    color: var(--primary-color); /* 橘色文字，確保可見 */
     font-size: 1.1em;
     font-weight: bold;
 }
-
-/* 編輯/刪除按鈕組件 */
-.admin-item-actions {
-    margin-top: auto;
-    padding-top: 10px;
-}
-.admin-item-actions button {
-    padding: 8px 12px;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    transition: all 0.2s;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
-    /* 統一按鈕風格 */
-}
-.admin-item-actions .edit-btn {
-    background-color: var(--accent-color); /* 綠色編輯 */
-    color: white;
-}
-.admin-item-actions .delete-btn {
-    background-color: #dc3545; /* 紅色刪除 */
-    color: white;
-}
-.admin-item-actions button:hover {
-    opacity: 0.8;
+.item-url {
+    color: var(--text-color-dark); /* 淺灰色文字，確保可見 */
+    font-size: 0.8em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-/* 新增/退出按鈕優化 */
-.admin-controls button {
-    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
-    transform: translateY(-2px);
-}
-.admin-controls button:hover {
-    transform: translateY(0);
-}
+/* ... 編輯/刪除按鈕組件樣式 (admin-item-actions) ... */
