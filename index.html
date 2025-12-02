@@ -30,7 +30,7 @@
         </div>
 
         <div class="mode-selection-section" id="logoutSection" style="display: none;">
-            <span id="welcomeMessage" class="welcome-text"></span>
+            <span id="welcomeMessage" class="welcome-text"></span> 
             <button id="logoutBtn" onclick="handleLogout()">登出 | Logout</button>
         </div>
 
@@ -41,15 +41,24 @@
 
         <div class="settings-section" id="settingsPanel" style="display: none;">
             <h2>⚙️ 網址連結設定 (管理員模式) | URL Link Settings (Admin Mode)</h2>
-            <div id="urlListContainer">
+            
+            <div id="urlListContainer" class="admin-button-grid">
                 </div>
             
-            <button id="addNewBtn" onclick="showAddForm()">新增網址 | Add New</button>
-            <button id="exitSettingsBtn" onclick="exitAdminView()">退出設定模式 | Exit Admin Mode</button>
-            
-            <form id="editUrlForm" class="edit-form" style="display: none;">
+            <div class="admin-controls">
+                <button id="addNewBtn" onclick="showAddForm()">新增網址 | Add New</button>
+                <button id="exitSettingsBtn" onclick="exitAdminView()">退出設定模式 | Exit Admin Mode</button>
+            </div>
+        </div>
+        
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="hideAddForm()">&times;</span>
+            <form id="editUrlForm" class="edit-form">
                 <input type="hidden" id="edit-id">
-                <h3>新增/修改連結 | Add/Edit Link</h3>
+                <h3><span id="modalTitle">新增/修改連結 | Add/Edit Link</span></h3>
                 
                 <label for="edit-name">按鈕名稱 (作為連結描述) | Button Name:</label>
                 <input type="text" id="edit-name" required placeholder="例如：Machine-NG 報修"><br>
@@ -64,7 +73,6 @@
                 <button type="button" onclick="hideAddForm()">取消 | Cancel</button>
             </form>
         </div>
-        
     </div>
     
     <script src="script.js"></script>
