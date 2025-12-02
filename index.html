@@ -3,20 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>工作站功能介面 - 動態版</title>
+    <title id="pageTitle">生產智能系統彙整 登入 | Production Intelligence System Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body onload="initPage()">
     <div class="container">
-        <h1>🛠️ 工作站功能選單</h1>
+        <h1 id="mainHeader">生產智能系統彙整 登入 | Production Intelligence System Login</h1>
 
-        <div class="mode-selection-section">
-            <label for="passwordInput">請輸入 ID：</label>
+        <div class="mode-selection-section" id="loginSection">
+            <label for="passwordInput">請輸入 ID (Enter ID)：</label>
             <input type="text" id="passwordInput" placeholder="輸入您的 ID">
-            <button id="loginBtn" onclick="handleLogin()">登入</button>
+            <button id="loginBtn" onclick="handleLogin()">登入 | Login</button>
             
-            <button id="adminSetupBtn" onclick="showAdminPrompt()">⚙️ 管理設定</button>
+            <button id="adminSetupBtn" onclick="showAdminPrompt()">⚙️ 管理設定 | Admin Setup</button>
+        </div>
+
+        <div class="mode-selection-section" id="logoutSection" style="display: none;">
+            <span id="welcomeMessage" class="welcome-text"></span>
+            <button id="logoutBtn" onclick="handleLogout()">登出 | Logout</button>
         </div>
 
         <hr>
@@ -25,32 +30,36 @@
             </div>
 
         <div class="settings-section" id="settingsPanel" style="display: none;">
-            <h2>⚙️ 網址連結設定 (管理員模式)</h2>
+            <h2>⚙️ 網址連結設定 (管理員模式) | URL Link Settings (Admin Mode)</h2>
             <div id="urlListContainer">
                 </div>
             
-            <button id="addNewBtn" onclick="showAddForm()">新增網址</button>
-            <button id="exitSettingsBtn" onclick="exitSettings()">退出設定模式</button>
+            <button id="addNewBtn" onclick="showAddForm()">新增網址 | Add New</button>
+            <button id="exitSettingsBtn" onclick="handleLogout()">退出設定模式 | Exit Admin Mode</button>
             
             <form id="editUrlForm" class="edit-form" style="display: none;">
                 <input type="hidden" id="edit-id">
-                <h3>新增/修改連結</h3>
+                <h3>新增/修改連結 | Add/Edit Link</h3>
                 
-                <label for="edit-name">按鈕名稱 (作為連結描述):</label>
+                <label for="edit-name">按鈕名稱 (作為連結描述) | Button Name:</label>
                 <input type="text" id="edit-name" required placeholder="例如：Machine-NG 報修"><br>
 
-                <label for="edit-url">網址連結:</label>
+                <label for="edit-url">網址連結 | URL Link:</label>
                 <input type="url" id="edit-url" required placeholder="https://your.link.com/page"><br>
 
-                <label for="edit-icon">圖示 (Font Awesome Icon Class):</label>
-                <input type="text" id="edit-icon" placeholder="例如：fas fa-tools (可選)"><br>
+                <label for="edit-icon">圖示 (Font Awesome Icon Class) | Icon Class:</label>
+                <input type="text" id="edit-icon" placeholder="例如：fas fa-tools (可選 | Optional)"><br>
                 
-                <button type="submit">儲存</button>
-                <button type="button" onclick="hideAddForm()">取消</button>
+                <button type="submit">儲存 | Save</button>
+                <button type="button" onclick="hideAddForm()">取消 | Cancel</button>
             </form>
         </div>
         
     </div>
+
+    <footer class="author-info">
+        Author: DEREK LIN
+    </footer>
 
     <script src="script.js"></script>
 </body>
