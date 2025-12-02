@@ -1,90 +1,89 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">生產智能系統彙整 登入 | Production Intelligence System Login</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body onload="initPage()">
-    <div class="container">
-        <div class="header-container">
-            <h1 id="mainHeader">生產智能系統彙整 登入 | Production Intelligence System Login</h1>
-            <span class="author-info-header">Author: DEREK LIN</span>
-        </div>
+/* -------------------- Modal 內大按鈕優化 - 修正居中與手機溢出 -------------------- */
+.modal {
+    z-index: 9999; 
+    display: none; 
+    position: fixed; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    /* 關鍵修正 1: 使用 Flexbox 確保內容在任何尺寸下都完美居中 */
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    overflow: auto; /* 允許內容過高時滾動 */
+    background-color: rgba(0,0,0,0.8);
+}
 
-        <div class="mode-buttons-grid" id="modeSelectSection">
-            <div class="login-controls">
-                <label for="userIDInput">請輸入 ID (Enter ID)：</label>
-                <input type="text" id="userIDInput" placeholder="輸入您的 ID">
-                <button class="mode-btn mode-btn-login" onclick="handleLogin()">登入 | Login</button>
-            </div>
-            
-            <button class="mode-btn mode-btn-admin" onclick="showAdminPrompt()">
-                <i class="fas fa-lock fa-4x"></i>
-                <span>管理設定 | Admin Setup</span>
-            </button>
-            
-            <button class="mode-btn mode-btn-exit" onclick="alert('請關閉瀏覽器或重新整理頁面。')">
-                <i class="fas fa-sign-out-alt fa-4x"></i>
-                <span>退出 | Exit</span>
-            </button>
-        </div>
-
-        <div id="logoutSection" style="display: none;">
-            <div class="logout-control-bar">
-                <span id="welcomeMessage" class="welcome-text"></span>
-                <button id="logoutBtn" onclick="handleLogout()">登出 | Logout</button>
-            </div>
-        </div>
-
-        <hr id="hrDivider" style="display: none;">
-        
-        <div class="button-grid" id="mainFeatures" style="display: none;">
-            </div>
-
-        <div class="settings-section" id="settingsPanel" style="display: none;">
-            <h2>⚙️ 網址連結設定 (管理員模式) | URL Link Settings (Admin Mode)</h2>
-            
-            <div id="urlListContainer" class="admin-button-grid">
-            </div>
-            
-            <div class="admin-controls">
-                <button id="addNewBtn" onclick="showAddForm()">新增網址 | Add New</button>
-                <button id="exitSettingsBtn" onclick="exitAdminView()">退出設定模式 | Exit Admin Mode</button>
-            </div>
-        </div>
-        
-    </div>
-
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="hideAddForm()">&times;</span>
-            <form id="editUrlForm" class="edit-form">
-                <input type="hidden" id="edit-id">
-                
-                <h3><span id="modalTitle">新增/修改連結 | Add/Edit Link</span></h3> 
-                
-                <div class="input-grid">
-                    <label for="edit-name">按鈕名稱 (作為連結描述) | Button Name:</label>
-                    <input type="text" id="edit-name" required placeholder="例如：Machine-NG 報修"><br>
-
-                    <label for="edit-url">網址連結 | URL Link:</label>
-                    <input type="url" id="edit-url" required placeholder="https://your.link.com/page"><br>
-
-                    <label for="edit-icon">圖示 (Font Awesome Icon Class) | Icon Class:</label>
-                    <select id="edit-icon"></select><br>
-                </div>
-
-                <div class="modal-actions">
-                    <button type="submit" class="modal-save-btn">儲存 | Save</button>
-                    <button type="button" class="modal-cancel-btn" onclick="hideAddForm()">取消 | Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
+.modal-content {
+    background-color: #111111;
+    /* 移除所有絕對定位和 transform */
+    position: relative; 
     
-    <script src="script.js"></script>
-</body>
-</html>
+    margin: 20px auto; /* 確保內容不會頂到頂部，並在 Modal 容器內居中 */
+    width: 90%; 
+    max-width: 450px; 
+    padding: 20px; 
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(40, 167, 69, 0.8);
+}
+
+/* 修正 Modal 內部的輸入欄位佈局 */
+.input-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* 單欄佈局 */
+    gap: 15px;
+    margin-top: 20px;
+}
+.modal-content label {
+    text-align: left;
+    margin-bottom: -10px;
+    font-weight: bold;
+    color: var(--text-color-light);
+}
+
+.modal-content input, 
+.modal-content select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--accent-color);
+    border-radius: 4px;
+    background-color: #000;
+    color: var(--text-color-light);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.modal-save-btn { /* ... 樣式不變 ... */ }
+.modal-cancel-btn { /* ... 樣式不變 ... */ }
+
+
+/* ============================================= */
+/* 修正: 響應式設計 (手機畫面優化) - 確保 Modal 在手機上不溢出 */
+/* ============================================= */
+
+@media (max-width: 768px) {
+    /* ... (其他響應式佈局修正保持不變) ... */
+    
+    .modal-content {
+        /* 關鍵修正 2: 確保手機上 Modal 內容寬度不會超過螢幕 */
+        width: 95%; 
+        min-width: 300px;
+        padding: 15px;
+        margin: 10px auto; /* 確保在 Modal Flex 容器內居中 */
+    }
+    
+    .modal-actions {
+        flex-direction: column; 
+        gap: 10px;
+    }
+    .modal-actions button {
+        width: 100%;
+    }
+    /* ... (其餘媒體查詢樣式保持不變) ... */
+}
