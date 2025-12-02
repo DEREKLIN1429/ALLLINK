@@ -140,9 +140,10 @@ function renderSettingsList() {
         const item = document.createElement('div');
         item.className = 'admin-item-btn'; 
 
-        // 點擊整個大按鈕，排除點擊動作按鈕時，彈出編輯介面
+        // 修正點擊事件：確保點擊編輯/刪除按鈕時，事件不會向上傳播，防止 Modal 衝突。
         item.addEventListener('click', (e) => {
-            if (e.target.tagName !== 'BUTTON' && e.target.closest('.admin-item-actions') === null) {
+            // 檢查點擊是否來自動作按鈕區域以外
+            if (e.target.closest('.admin-item-actions') === null) {
                 editLink(link.id);
             }
         });
@@ -151,8 +152,8 @@ function renderSettingsList() {
             <div class="item-name">${link.name}</div>
             <div class="item-url">${link.url}</div>
             <div class="admin-item-actions">
-                <button class="edit-btn" onclick="editLink(${link.id})">編輯 | Edit</button>
-                <button class="delete-btn" onclick="deleteLink(${link.id})">刪除 | Delete</button>
+                <button class="edit-btn" onclick="editLink(${link.id}); event.stopPropagation();">編輯 | Edit</button>
+                <button class="delete-btn" onclick="deleteLink(${link.id}); event.stopPropagation();">刪除 | Delete</button>
             </div>
         `;
         container.appendChild(item);
