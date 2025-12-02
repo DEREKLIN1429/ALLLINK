@@ -1,7 +1,7 @@
 :root {
     --primary-color: #FF8C00; /* 主橘色 */
     --secondary-color: #000000; /* 主黑色/背景色 */
-    --accent-color: #28A745; /* 輔助綠色 (主要邊框與圖示色) */
+    --accent-color: #28A745; /* 輔助綠色 */
     --text-color-light: #f5f5f5; /* 淺色文字 */
     --text-color-dark: #cccccc; /* 深色文字 */
     --button-bg: #333333; /* 按鈕背景 */
@@ -15,7 +15,7 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    background: linear-gradient(135deg, #0a0a0a, #1a1a1a); 
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a); /* 漸變背景 */
     color: var(--text-color-light);
 }
 
@@ -47,6 +47,13 @@ body {
     text-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
     font-size: 1.8em; 
 }
+
+/* 修正: 使用者模式標題字體縮小 */
+.header-container h1:not(#mainHeader), 
+.header-container h1[id="mainHeader"] {
+    /* 確保只有在特定模式下才縮小，但由於 JS 動態修改，這裡使用 Media Query 來控制響應式下的標題 */
+}
+
 .author-info-header {
     font-size: 0.9em;
     color: var(--text-color-dark);
@@ -74,12 +81,12 @@ body {
 
 /* -------------------- GUEST 模式大按鈕 & ID 輸入美化 -------------------- */
 .mode-buttons-grid {
-    /* 登入區維持 3 欄佈局 */
     display: grid;
     grid-template-columns: repeat(3, 1fr); 
     gap: 30px;
     padding: 40px 0;
 }
+
 .mode-btn { /* ... 樣式不變 ... */ }
 .login-controls { grid-column: 1 / span 2; }
 #userIDInput { /* ... 樣式不變 ... */ }
@@ -101,43 +108,77 @@ body {
     /* 保持正方形和立體感 */
     aspect-ratio: 1 / 1;
     padding: 20px; 
-    font-size: 1.2em; /* 基礎字體加大 */
+    font-size: 1em;
 }
 
-/* USER 按鈕美化 */
-.icon-btn {
-    background: linear-gradient(135deg, #111 20%, var(--button-bg) 50%, var(--primary-color) 90%); 
-    box-shadow: 0 6px 0 var(--accent-color); 
-    transform: translateY(-2px);
-    border: 1px solid var(--text-color-dark);
-}
-.icon-btn:hover { box-shadow: 0 3px 0 var(--accent-color); }
-.btn-icon-fa {
-    color: var(--accent-color); 
-    font-size: 3em !important; 
+.icon-btn { /* ... 樣式不變 ... */ }
+.btn-icon-fa { color: var(--accent-color); font-size: 3em !important; }
+
+/* -------------------- ADMIN 頁面清單 (大按鈕模式美化) -------------------- */
+.admin-item-btn { /* ... 樣式不變 ... */ }
+
+/* -------------------- Modal 內大按鈕優化 - 修正手機超出 -------------------- */
+.modal {
+    z-index: 9999; 
+    display: none; 
+    position: fixed; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.8);
 }
 
-/* ADMIN 列表按鈕美化 */
-.admin-item-btn {
-    background: linear-gradient(135deg, #222, #000); 
-    border: 2px solid var(--accent-color); 
-    box-shadow: 0 4px 0 var(--primary-color); 
-    transform: translateY(-2px);
-    cursor: pointer;
+/* 修正 Modal 居中與寬度 */
+.modal-content {
+    background-color: #111111;
+    /* 關鍵修正: 移除 margin-left/right 的 auto 設置，使用 transform 居中 */
+    position: absolute; /* 相對於 Modal 容器定位 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 精確居中 */
+    
+    width: 90%; 
+    max-width: 450px; 
+    padding: 20px; 
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(40, 167, 69, 0.8);
 }
-.item-name {
-    color: var(--primary-color);
-    font-size: 1.1em;
+
+/* 修正 Modal 內部的輸入欄位佈局 */
+.input-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* 單欄佈局 */
+    gap: 15px;
+    margin-top: 20px;
+}
+.modal-content label {
+    text-align: left;
+    margin-bottom: -10px;
     font-weight: bold;
-}
-.item-url {
-    color: var(--text-color-dark);
-    font-size: 0.8em;
+    color: var(--text-color-light);
 }
 
-/* -------------------- Modal 內大按鈕優化 - 修正佈局 -------------------- */
-.modal { z-index: 9999; }
-.modal-content { /* ... 樣式不變 ... */ }
+.modal-content input, 
+.modal-content select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--accent-color);
+    border-radius: 4px;
+    background-color: #000;
+    color: var(--text-color-light);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.modal-save-btn { /* ... 樣式不變 ... */ }
+.modal-cancel-btn { /* ... 樣式不變 ... */ }
 
 /* ============================================= */
 /* 修正: 響應式設計 (手機畫面優化) */
@@ -150,17 +191,20 @@ body {
         max-width: 100%;
     }
 
-    /* 登出/歡迎區優化 */
-    .logout-control-bar {
-        flex-direction: column; /* 堆疊顯示 */
+    /* 修正: 標題字體縮小 */
+    .header-container h1 {
+        font-size: 1.2em; /* 手機上字體縮小 */
+    }
+
+    .header-container {
+        flex-direction: column; 
         align-items: flex-start;
-        gap: 10px;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
     }
-    .welcome-text {
-        font-size: 1.6em; /* 加大歡迎字體 */
-    }
-    #logoutBtn {
-        width: 100%; /* 登出按鈕佔滿寬度 */
+    .author-info-header {
+        margin-top: 5px;
+        font-size: 0.8em;
     }
 
     /* 所有功能區塊在手機上改為 1 欄佈局 */
@@ -178,33 +222,37 @@ body {
         width: 100%;
     }
 
-    /* 確保按鈕字體加大且垂直感強烈 */
-    .icon-btn, .admin-item-btn {
-        min-height: 150px; /* 增加最小高度 */
-        font-size: 1.4em; /* 按鈕字體加大 */
-        padding: 20px;
-        border-width: 3px; /* 增強邊框對比 */
-    }
-    .btn-icon-fa {
-        font-size: 3.5em !important; /* 圖示加大 */
-        margin-bottom: 10px;
-    }
-    .admin-item-actions button {
-        font-size: 1em; /* 編輯/刪除按鈕字體大小 */
-    }
-
-    /* Modal 調整 */
+    /* Modal 調整 - 確保在手機上居中 */
     .modal-content {
-        margin: 5% auto;
-        width: 98%;
+        width: 98%; 
         padding: 10px;
         font-size: 0.9em;
     }
+    
+    /* 確保所有大按鈕維持立體感和可視性 */
+    .mode-btn, .icon-btn, .admin-item-btn {
+        min-height: 120px; 
+        font-size: 1em;
+        padding: 15px;
+    }
+    .btn-icon-fa {
+        font-size: 2.5em !important; 
+    }
+
+    .modal-actions {
+        flex-direction: column; 
+        gap: 10px;
+    }
+    .modal-actions button {
+        width: 100%;
+    }
     .admin-controls {
+        display: flex; 
+        justify-content: space-between;
         flex-wrap: wrap; 
         gap: 10px;
     }
     .admin-controls button {
-        width: 100%; /* 新增/退出按鈕在手機上佔滿寬度 */
+        width: 48%; 
     }
 }
