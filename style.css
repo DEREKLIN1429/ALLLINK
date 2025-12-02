@@ -62,10 +62,19 @@ body {
     border-bottom: 1px solid var(--text-color-dark);
 }
 
-.welcome-bar { width: 100%; text-align: left; margin-bottom: 10px; padding: 5px 0; }
-.logout-control-bar { width: 100%; text-align: right; }
+/* 修正: 使用 Flexbox 將歡迎訊息和按鈕分離 */
+.logout-control-bar {
+    width: 100%;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+}
 
-.welcome-text { font-size: 1.5em; font-weight: bold; color: var(--accent-color); }
+.welcome-text { 
+    font-size: 1.5em; 
+    font-weight: bold;
+    color: var(--accent-color); 
+}
 #logoutBtn {
     padding: 10px 20px;
     background-color: #dc3545; 
