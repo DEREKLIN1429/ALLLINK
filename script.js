@@ -7,7 +7,7 @@ const TITLE_ADMIN_MODE = '🛠️ 工作站功能選單 | Workstation Features M
 
 const ADMIN_PASSWORD = '12345'; 
 const STORAGE_KEY = 'factory_links_data';
-const USER_ID_KEY = 'current_user_id'; 
+const USER_ID_KEY = 'current_user_id'; // 移除 ID 登入功能，但保留 KEY 以防誤讀
 let currentLinks = []; 
 let currentMode = 'GUEST'; 
 let currentUserID = ''; 
@@ -70,11 +70,13 @@ function loadLinks() {
     } else {
         currentLinks = DEFAULT_LINKS;
     }
-    currentUserID = localStorage.getItem(USER_ID_KEY) || '';
+    // 移除 ID 相關讀取，因為功能已移除
+    // currentUserID = localStorage.getItem(USER_ID_KEY) || ''; 
 }
 
 function saveLinks() {
-    localStorage.setItem(USER_ID_KEY, currentUserID); 
+    // 移除 ID 儲存，因為功能已移除
+    // localStorage.setItem(USER_ID_KEY, currentUserID); 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(currentLinks));
 }
 
@@ -178,7 +180,7 @@ function showAddForm(id = null) {
     const urlInput = document.getElementById('edit-url');
     let selectedIconClass = '';
     
-    // 修正: 顯示時設為 flex
+    // 顯示時設為 flex
     modal.style.display = 'flex'; 
 
     if (id !== null) {
@@ -201,7 +203,7 @@ function showAddForm(id = null) {
 }
 
 function hideAddForm() {
-    // 修正: 隱藏時設為 none
+    // 隱藏時設為 none
     document.getElementById('editModal').style.display = 'none'; 
 }
 
@@ -256,10 +258,11 @@ function initPage() {
     renderUserButtons();
     setTitles('GUEST');
     
-    const userIDInput = document.getElementById('userIDInput');
-    if (currentUserID) {
-        userIDInput.value = currentUserID;
-    }
+    // 移除 ID 輸入欄位的預填邏輯
+    // const userIDInput = document.getElementById('userIDInput');
+    // if (currentUserID) {
+    //     userIDInput.value = currentUserID;
+    // }
 
     document.getElementById('modeSelectSection').style.display = 'grid'; 
     document.getElementById('mainFeatures').style.display = 'none';
@@ -268,6 +271,8 @@ function initPage() {
     document.getElementById('hrDivider').style.display = 'none';
 }
 
+/* 移除 handleLogin 函數，功能被 enterUserMode 吸收 */
+/*
 function handleLogin() {
     const userIDInput = document.getElementById('userIDInput');
     const inputID = userIDInput.value.trim();
@@ -280,6 +285,7 @@ function handleLogin() {
         alert('請輸入您的 ID (Please enter your ID)。');
     }
 }
+*/
 
 function showAdminPrompt() {
     const password = prompt("請輸入管理員密碼 (Enter Admin Password)：");
@@ -292,11 +298,13 @@ function showAdminPrompt() {
 }
 
 function exitAdminView() {
-    handleLogout(false);
+    // Admin 退出時，回到 GUEST 模式，不清除數據
+    handleLogout(false); 
     alert('已退出管理員設定畫面 (Exited Admin Setup View)。');
 }
 
-function handleLogout(clearID = true) {
+function handleLogout(clearID = false) { 
+    // 修正: 由於 ID 登入已移除，此函數用於模式重置
     if (clearID) {
         localStorage.removeItem(USER_ID_KEY);
         currentUserID = '';
@@ -305,7 +313,8 @@ function handleLogout(clearID = true) {
     currentMode = 'GUEST';
     setTitles('GUEST');
     
-    document.getElementById('userIDInput').value = currentUserID;
+    // 移除 ID 輸入欄位的值設定，因為 ID 輸入欄位已被移除 (或不再是登入的主要方式)
+    // document.getElementById('userIDInput').value = ''; 
 
     document.getElementById('modeSelectSection').style.display = 'grid'; 
     document.getElementById('logoutSection').style.display = 'none';
@@ -328,6 +337,8 @@ function enterSettingsMode() {
 }
 
 function enterUserMode(userID) {
+    // 修正: 由於 ID 登入已移除，這裡將 userID 預設為 '訪客'
+    const actualUserID = userID || '訪客';
     currentMode = 'USER';
     setTitles('USER');
     
@@ -337,7 +348,7 @@ function enterUserMode(userID) {
     document.getElementById('settingsPanel').style.display = 'none';
     document.getElementById('hrDivider').style.display = 'block'; 
     
-    document.getElementById('welcomeMessage').textContent = `歡迎, ${userID} (Welcome, ${userID})`;
+    document.getElementById('welcomeMessage').textContent = `歡迎, ${actualUserID} (Welcome, ${actualUserID})`;
 }
 
 
@@ -345,10 +356,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('editUrlForm').addEventListener('submit', handleFormSubmit);
     initPage();
 
-    // 修正: 確保點擊 Modal 背景時能正確關閉 Modal
     window.onclick = function(event) {
       const modal = document.getElementById('editModal');
-      // 檢查 Modal 是否顯示 (display === 'flex') 並且點擊目標是 Modal 容器本身
+      // 確保 Modal 隱藏時，點擊外部區域也能將其關閉
       if (modal.style.display === 'flex' && event.target === modal) {
         modal.style.display = "none";
       }
