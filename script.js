@@ -1,5 +1,5 @@
 // =======================================================
-// 全域變數/常數
+// 全域變數/常數 (保持不變)
 // =======================================================
 const TITLE_LOGIN = '生產智能系統彙整 登入 | Production Intelligence System Login';
 const TITLE_USER_MODE = '生產智能系統彙整 | Production Intelligence System Integration';
@@ -7,12 +7,12 @@ const TITLE_ADMIN_MODE = '🛠️ 工作站功能選單 | Workstation Features M
 
 const ADMIN_PASSWORD = '12345'; 
 const STORAGE_KEY = 'factory_links_data';
-const USER_ID_KEY = 'current_user_id'; // 新增：用於儲存 ID 的 Key
+const USER_ID_KEY = 'current_user_id'; 
 let currentLinks = []; 
 let currentMode = 'GUEST'; 
 let currentUserID = ''; 
 
-// ... (ICON_OPTIONS, DEFAULT_LINKS 保持不變，為節省篇幅省略)
+// ... (ICON_OPTIONS, DEFAULT_LINKS 保持與上個版本一致)
 const ICON_OPTIONS = [
     { class: 'fas fa-link', name: '預設/連結 (Link)' },
     { class: 'fas fa-exclamation-triangle', name: '警示/報修 (Warning)' },
@@ -35,7 +35,7 @@ const DEFAULT_LINKS = [
 ];
 
 // =======================================================
-// 函數：標題控制 (保持不變)
+// 函數：標題控制 & 儲存/載入 (保持不變)
 // =======================================================
 function setTitles(mode) {
     const header = document.getElementById('mainHeader');
@@ -57,10 +57,6 @@ function setTitles(mode) {
     }
 }
 
-// =======================================================
-// 函數：CRUD / 渲染
-// =======================================================
-
 function loadLinks() {
     const data = localStorage.getItem(STORAGE_KEY);
     if (data) {
@@ -68,7 +64,6 @@ function loadLinks() {
     } else {
         currentLinks = DEFAULT_LINKS;
     }
-    // 嘗試載入記憶的 ID
     currentUserID = localStorage.getItem(USER_ID_KEY) || '';
 }
 
@@ -76,9 +71,11 @@ function saveLinks() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(currentLinks));
 }
 
-/**
- * 修正：使用者模式按鈕點擊後直接連結，不彈出修改介面
- */
+
+// =======================================================
+// 函數：動態渲染 (使用者模式 & 管理模式)
+// =======================================================
+
 function renderUserButtons() {
     const grid = document.getElementById('mainFeatures');
     grid.innerHTML = ''; 
@@ -101,7 +98,6 @@ function renderUserButtons() {
             <span>${link.name}</span>
         `;
         
-        // 點擊事件：直接連結
         button.addEventListener('click', () => {
              if (link.url) {
                 window.open(link.url, '_blank');
@@ -113,8 +109,6 @@ function renderUserButtons() {
         grid.appendChild(button);
     });
 }
-
-// 移除原有的 promptForNewUrl 函數，行為已合併到 renderUserButtons
 
 function populateIconSelect(selectedValue = '') {
     const select = document.getElementById('edit-icon');
@@ -149,6 +143,15 @@ function renderSettingsList() {
     currentLinks.forEach(link => {
         const item = document.createElement('div');
         item.className = 'admin-item-btn'; // 使用大按鈕樣式
+
+        // 點擊整個大按鈕，直接彈出編輯介面
+        item.addEventListener('click', (e) => {
+            // 避免點擊子按鈕（編輯/刪除）時觸發兩次 Modal
+            if (e.target.tagName !== 'BUTTON') {
+                editLink(link.id);
+            }
+        });
+
         item.innerHTML = `
             <div class="item-name">${link.name}</div>
             <div class="item-url">${link.url}</div>
@@ -161,9 +164,10 @@ function renderSettingsList() {
     });
 }
 
-/**
- * 顯示新增/修改 Modal (大按鈕風格介面)
- */
+// =======================================================
+// 函數：CRUD 操作 (使用 Modal)
+// =======================================================
+
 function showAddForm(id = null) {
     const modal = document.getElementById('editModal');
     const formTitle = document.getElementById('modalTitle');
@@ -207,18 +211,21 @@ function handleFormSubmit(e) {
     const icon = document.getElementById('edit-icon').value.trim(); 
 
     if (id) {
+        // 修改
         const index = currentLinks.findIndex(l => l.id === parseInt(id));
         if (index !== -1) {
             currentLinks[index] = { id: parseInt(id), name, url, icon };
         }
         alert(`連結 ${name} 已修改！`);
     } else {
+        // 新增
         const newId = currentLinks.length > 0 ? Math.max(...currentLinks.map(l => l.id)) + 1 : 1;
         currentLinks.push({ id: newId, name, url, icon });
         alert(`連結 ${name} 已新增！`);
     }
 
     saveLinks(); 
+    renderUserButtons(); // 新增/修改後，更新使用者介面按鈕
     renderSettingsList(); 
     hideAddForm(); 
 }
@@ -232,6 +239,7 @@ function deleteLink(id) {
     if (link && confirm(`確定要刪除連結 "${link.name}" 嗎？`)) {
         currentLinks = currentLinks.filter(l => l.id !== id);
         saveLinks();
+        renderUserButtons(); // 刪除後，更新使用者介面按鈕
         renderSettingsList();
         alert(`連結 ${link.name} 已刪除。`);
     }
@@ -239,15 +247,13 @@ function deleteLink(id) {
 
 
 // =======================================================
-// 函數：模式切換 (登入/登出) - ID 記憶與登入
+// 函數：模式切換 (登入/登出) - 保持不變
 // =======================================================
-
 function initPage() {
     loadLinks();
     renderUserButtons();
     setTitles('GUEST');
     
-    // 檢查是否有記憶的 ID，如果有則預填
     const userIDInput = document.getElementById('userIDInput');
     if (currentUserID) {
         userIDInput.value = currentUserID;
@@ -260,16 +266,13 @@ function initPage() {
     document.getElementById('hrDivider').style.display = 'none';
 }
 
-/**
- * 修正：處理 ID 輸入登入，並記憶 ID
- */
 function handleLogin() {
     const userIDInput = document.getElementById('userIDInput');
     const inputID = userIDInput.value.trim();
 
     if (inputID !== '') {
         currentUserID = inputID;
-        localStorage.setItem(USER_ID_KEY, inputID); // 記憶 ID
+        localStorage.setItem(USER_ID_KEY, inputID); 
         enterUserMode(inputID);
     } else {
         alert('請輸入您的 ID (Please enter your ID)。');
@@ -287,15 +290,10 @@ function showAdminPrompt() {
 }
 
 function exitAdminView() {
-    handleLogout(false); // 退出管理員畫面不清除 ID
+    handleLogout(false);
     alert('已退出管理員設定畫面 (Exited Admin Setup View)。');
 }
 
-
-/**
- * 處理登出，可選擇是否清除記憶的 ID
- * @param {boolean} clearID - 是否清除 localStorage 中的 ID，預設為 true (實際登出)
- */
 function handleLogout(clearID = true) {
     if (clearID) {
         localStorage.removeItem(USER_ID_KEY);
@@ -305,7 +303,6 @@ function handleLogout(clearID = true) {
     currentMode = 'GUEST';
     setTitles('GUEST');
     
-    // 登出後，將 ID 輸入框清空
     document.getElementById('userIDInput').value = currentUserID;
 
     document.getElementById('modeSelectSection').style.display = 'grid'; 
