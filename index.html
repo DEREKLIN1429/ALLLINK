@@ -15,14 +15,17 @@
         </div>
 
         <div class="mode-buttons-grid" id="modeSelectSection">
-            <button class="mode-btn mode-btn-user" onclick="enterUserMode('使用者')">
-                <i class="fas fa-desktop fa-4x"></i>
-                <span>使用者模式 | User Mode</span>
-            </button>
+            <div class="login-controls">
+                <label for="userIDInput">請輸入 ID (Enter ID)：</label>
+                <input type="text" id="userIDInput" placeholder="輸入您的 ID">
+                <button class="mode-btn mode-btn-login" onclick="handleLogin()">登入 | Login</button>
+            </div>
+            
             <button class="mode-btn mode-btn-admin" onclick="showAdminPrompt()">
                 <i class="fas fa-lock fa-4x"></i>
                 <span>管理設定 | Admin Setup</span>
             </button>
+            
             <button class="mode-btn mode-btn-exit" onclick="alert('請關閉瀏覽器或重新整理頁面。')">
                 <i class="fas fa-sign-out-alt fa-4x"></i>
                 <span>退出 | Exit</span>
@@ -43,7 +46,7 @@
             <h2>⚙️ 網址連結設定 (管理員模式) | URL Link Settings (Admin Mode)</h2>
             
             <div id="urlListContainer" class="admin-button-grid">
-                </div>
+            </div>
             
             <div class="admin-controls">
                 <button id="addNewBtn" onclick="showAddForm()">新增網址 | Add New</button>
@@ -69,8 +72,10 @@
                 <label for="edit-icon">圖示 (Font Awesome Icon Class) | Icon Class:</label>
                 <select id="edit-icon"></select><br>
                 
-                <button type="submit">儲存 | Save</button>
-                <button type="button" onclick="hideAddForm()">取消 | Cancel</button>
+                <div class="modal-actions">
+                    <button type="submit" class="modal-save-btn">儲存 | Save</button>
+                    <button type="button" class="modal-cancel-btn" onclick="hideAddForm()">取消 | Cancel</button>
+                </div>
             </form>
         </div>
     </div>
