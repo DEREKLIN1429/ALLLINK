@@ -1,20 +1,16 @@
 // =======================================================
-// 全域變數/常數
+// 全域變數/常數 (保持不變)
 // =======================================================
 
-// 標題常數
 const TITLE_LOGIN = '生產智能系統彙整 登入 | Production Intelligence System Login';
 const TITLE_USER_MODE = '生產智能系統彙整 | Production Intelligence System Integration';
-const TITLE_ADMIN_MODE = '🛠️ 工作站功能選單 | Workstation Features Menu'; // 管理員模式標題
+const TITLE_ADMIN_MODE = '🛠️ 工作站功能選單 | Workstation Features Menu';
 
-// 登入/設定常數
 const ADMIN_PASSWORD = 'ADMIN'; 
-const USER_LOGIN_ID = 'USER'; // 只有這個ID才能進入使用者介面
 const STORAGE_KEY = 'factory_links_data';
 let currentLinks = []; 
 let currentMode = 'GUEST'; 
 
-// 常用的 Font Awesome 圖示清單 (ID: 圖示類別, Value: 顯示名稱)
 const ICON_OPTIONS = [
     { class: 'fas fa-link', name: '預設/連結 (Link)' },
     { class: 'fas fa-exclamation-triangle', name: '警示/報修 (Warning)' },
@@ -27,7 +23,6 @@ const ICON_OPTIONS = [
     { class: 'fas fa-users', name: '人員/團隊 (Users)' },
 ];
 
-// 預設連結清單
 const DEFAULT_LINKS = [
     { id: 1, name: 'Machine-NG 報修', url: 'https://demo.machine.ng', icon: 'fas fa-exclamation-triangle' },
     { id: 2, name: '5S Audit 表單', url: 'https://demo.5s.audit', icon: 'fas fa-clipboard-check' },
@@ -37,7 +32,7 @@ const DEFAULT_LINKS = [
 ];
 
 // =======================================================
-// 函數：標題控制
+// 函數：標題控制 (保持不變)
 // =======================================================
 
 function setTitles(mode) {
@@ -61,33 +56,7 @@ function setTitles(mode) {
 }
 
 // =======================================================
-// 函數：圖示選單
-// =======================================================
-
-/**
- * 動態填充圖示下拉選單的選項。
- */
-function populateIconSelect(selectedValue = '') {
-    const select = document.getElementById('edit-icon');
-    select.innerHTML = ''; // 清空現有選項
-    
-    // 預設選項
-    const defaultOption = document.createElement('option');
-    defaultOption.value = '';
-    defaultOption.textContent = '--- 請選擇圖示 (Select Icon) ---';
-    select.appendChild(defaultOption);
-
-    ICON_OPTIONS.forEach(icon => {
-        const option = document.createElement('option');
-        option.value = icon.class;
-        option.textContent = `${icon.name} (${icon.class})`;
-        option.selected = (icon.class === selectedValue);
-        select.appendChild(option);
-    });
-}
-
-// =======================================================
-// 函數：動態渲染 (使用者模式) - 加入臨時修改邏輯 (其餘保持不變)
+// 函數：CRUD / 渲染 (為節省篇幅，此處邏輯不變，請使用您最新的程式碼)
 // =======================================================
 
 function loadLinks() {
@@ -134,9 +103,8 @@ function renderUserButtons() {
 }
 
 function promptForNewUrl(link) {
-    // 只有在 USER 模式下才能執行
     if (currentMode !== 'USER') {
-        alert('請先以 USER ID 登入才能使用此功能！');
+        alert('請先進入使用者模式才能使用此功能！');
         return;
     }
 
@@ -166,8 +134,49 @@ function promptForNewUrl(link) {
     }
 }
 
-// ... (renderSettingsList, saveLinks, loadLinks 保持不變) ...
+function populateIconSelect(selectedValue = '') {
+    const select = document.getElementById('edit-icon');
+    select.innerHTML = ''; 
+    
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = '--- 請選擇圖示 (Select Icon) ---';
+    select.appendChild(defaultOption);
 
+    ICON_OPTIONS.forEach(icon => {
+        const option = document.createElement('option');
+        option.value = icon.class;
+        option.textContent = `${icon.name} (${icon.class})`;
+        option.selected = (icon.class === selectedValue);
+        select.appendChild(option);
+    });
+}
+
+function renderSettingsList() { 
+    const container = document.getElementById('urlListContainer');
+    container.innerHTML = ''; 
+
+    if (currentLinks.length === 0) {
+        container.innerHTML = '<p style="color:var(--primary-color);">清單為空，請點擊下方「新增網址」！</p>';
+        return;
+    }
+
+    currentLinks.forEach(link => {
+        const item = document.createElement('div');
+        item.className = 'url-item';
+        item.innerHTML = `
+            <div class="url-details">
+                <strong>${link.name}</strong>
+                <span>${link.url}</span>
+            </div>
+            <div class="url-actions">
+                <button class="edit-btn" onclick="editLink(${link.id})">編輯</button>
+                <button class="delete-btn" onclick="deleteLink(${link.id})">刪除</button>
+            </div>
+        `;
+        container.appendChild(item);
+    });
+}
 function showAddForm(id = null) {
     const form = document.getElementById('editUrlForm');
     const nameInput = document.getElementById('edit-name');
@@ -190,8 +199,11 @@ function showAddForm(id = null) {
         urlInput.value = '';
     }
     
-    // 在顯示表單時，填充圖示下拉選單並設定選中值
     populateIconSelect(selectedIconClass);
+}
+
+function hideAddForm() {
+    document.getElementById('editUrlForm').style.display = 'none';
 }
 
 function handleFormSubmit(e) {
@@ -200,7 +212,6 @@ function handleFormSubmit(e) {
     const id = document.getElementById('edit-id').value;
     const name = document.getElementById('edit-name').value.trim();
     const url = document.getElementById('edit-url').value.trim();
-    // 從下拉選單獲取值
     const icon = document.getElementById('edit-icon').value.trim(); 
 
     if (id) {
@@ -220,10 +231,23 @@ function handleFormSubmit(e) {
     hideAddForm(); 
 }
 
-// ... (editLink, deleteLink, hideAddForm 保持不變) ...
+function editLink(id) {
+    showAddForm(id);
+}
+
+function deleteLink(id) {
+    const link = currentLinks.find(l => l.id === id);
+    if (link && confirm(`確定要刪除連結 "${link.name}" 嗎？`)) {
+        currentLinks = currentLinks.filter(l => l.id !== id);
+        saveLinks();
+        renderSettingsList();
+        alert(`連結 ${link.name} 已刪除。`);
+    }
+}
+
 
 // =======================================================
-// 函數：模式切換 (登入/登出)
+// 函數：模式切換 (登入/登出) - 修正顯示邏輯
 // =======================================================
 
 function initPage() {
@@ -231,28 +255,12 @@ function initPage() {
     renderUserButtons();
     setTitles('GUEST');
     
+    // 初始狀態只顯示大按鈕選擇區 (GUEST 模式)
+    document.getElementById('modeSelectSection').style.display = 'grid'; // 確保 GUEST 畫面顯示
     document.getElementById('mainFeatures').style.display = 'none';
     document.getElementById('settingsPanel').style.display = 'none';
     document.getElementById('logoutSection').style.display = 'none';
-    document.getElementById('loginSection').style.display = 'flex';
-}
-
-function handleLogin() {
-    const passwordInput = document.getElementById('passwordInput');
-    const inputID = passwordInput.value.trim().toUpperCase();
-
-    if (inputID === USER_LOGIN_ID) {
-        // 特定 ID 進入使用者模式
-        passwordInput.value = ''; 
-        enterUserMode(inputID);
-    } else if (inputID !== '') {
-        // 其他 ID 登入成功，但停留在 GUEST 畫面
-        alert(`ID ${inputID} 登入成功！但此 ID 不具備介面存取權限。請使用 ${USER_LOGIN_ID} 登入。`);
-        passwordInput.value = ''; 
-        // 停留在 GUEST 模式
-    } else {
-        alert('請輸入您的 ID (Please enter your ID)。');
-    }
+    document.getElementById('hrDivider').style.display = 'none';
 }
 
 function showAdminPrompt() {
@@ -265,55 +273,53 @@ function showAdminPrompt() {
     }
 }
 
-/**
- * 退出管理員設定模式，回到登入畫面。
- * 這是在設定模式下，管理員唯一能做的 "退出" 行為。
- */
 function exitAdminView() {
-    currentMode = 'GUEST';
-    setTitles('GUEST');
-    
-    document.getElementById('settingsPanel').style.display = 'none';
-    document.getElementById('loginSection').style.display = 'flex';
-    document.getElementById('mainFeatures').style.display = 'none';
-    
+    // 退出管理員設定模式，回到 GUEST 狀態
+    handleLogout(); // 呼叫登出，因為登出會將狀態重置為 GUEST
     alert('已退出管理員設定畫面 (Exited Admin Setup View)。');
 }
 
 
 function handleLogout() {
-    // 退出使用者模式，回到 GUEST 狀態
+    // 退出所有模式，回到 GUEST 狀態
     currentMode = 'GUEST';
     setTitles('GUEST');
     
-    document.getElementById('loginSection').style.display = 'flex';
+    document.getElementById('modeSelectSection').style.display = 'grid'; // GUEST 畫面顯示
     document.getElementById('logoutSection').style.display = 'none';
     document.getElementById('mainFeatures').style.display = 'none';
     document.getElementById('settingsPanel').style.display = 'none';
-    
-    alert('已成功登出 (Logged out successfully)。');
+    document.getElementById('hrDivider').style.display = 'none';
 }
 
+/**
+ * 進入設定模式
+ */
 function enterSettingsMode() {
     currentMode = 'ADMIN';
     setTitles('ADMIN');
     
-    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('modeSelectSection').style.display = 'none';
     document.getElementById('logoutSection').style.display = 'none'; 
     document.getElementById('mainFeatures').style.display = 'none';
-    document.getElementById('settingsPanel').style.display = 'block';
+    document.getElementById('settingsPanel').style.display = 'block'; // 設定畫面顯示
+    document.getElementById('hrDivider').style.display = 'block'; 
     
     renderSettingsList(); 
 }
 
+/**
+ * 進入使用者模式 (由大按鈕觸發)
+ */
 function enterUserMode(userID) {
     currentMode = 'USER';
     setTitles('USER');
     
-    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('modeSelectSection').style.display = 'none';
     document.getElementById('logoutSection').style.display = 'flex';
-    document.getElementById('mainFeatures').style.display = 'grid';
+    document.getElementById('mainFeatures').style.display = 'grid'; // 使用者按鈕畫面顯示
     document.getElementById('settingsPanel').style.display = 'none';
+    document.getElementById('hrDivider').style.display = 'block'; 
     
     document.getElementById('welcomeMessage').textContent = `歡迎, ${userID} (Welcome, ${userID})`;
 }
