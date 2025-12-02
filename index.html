@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>工作站功能介面</title>
+    <title>工作站功能介面 - 動態版</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -11,65 +11,40 @@
     <div class="container">
         <h1>🛠️ 工作站功能選單</h1>
 
-        <div class="id-input-section">
-            <label for="userID">輸入您的 ID：</label>
-            <input type="text" id="userID" placeholder="請輸入 ID">
-            <button id="confirmBtn" onclick="checkID()">確認</button>
-            
-            <button id="settingsBtn" onclick="showPasswordPrompt()">設定</button>
+        <div class="mode-selection-section">
+            <label for="passwordInput">請輸入密碼：</label>
+            <input type="password" id="passwordInput" placeholder="輸入 ID 或管理密碼">
+            <button id="loginBtn" onclick="handleLogin()">登入</button>
         </div>
 
         <hr>
         
+        <div class="button-grid" id="mainFeatures">
+            </div>
+
         <div class="settings-section" id="settingsPanel" style="display: none;">
-            <h2>⚙️ 網址連結設定</h2>
-            <form id="urlSettingForm">
-                <label>Machine-NG 網址:</label>
-                <input type="url" id="url-machine-ng" placeholder="https://..." required><br>
+            <h2>⚙️ 網址連結設定 (管理員模式)</h2>
+            <div id="urlListContainer">
+                </div>
+            
+            <button id="addNewBtn" onclick="showAddForm()">新增網址</button>
+            <button id="exitSettingsBtn" onclick="exitSettings()">退出設定模式</button>
+            
+            <form id="editUrlForm" class="edit-form" style="display: none;">
+                <input type="hidden" id="edit-id">
+                <h3>新增/修改連結</h3>
+                <label for="edit-name">按鈕名稱 (作為連結描述):</label>
+                <input type="text" id="edit-name" required placeholder="例如：Machine-NG 報修"><br>
 
-                <label>5S audit 網址:</label>
-                <input type="url" id="url-5s-audit" placeholder="https://..." required><br>
+                <label for="edit-url">網址連結:</label>
+                <input type="url" id="edit-url" required placeholder="https://your.link.com/page"><br>
+
+                <label for="edit-icon">圖示 (Font Awesome Icon Class):</label>
+                <input type="text" id="edit-icon" placeholder="例如：fas fa-tools (可選)"><br>
                 
-                <label>機械維修紀錄 網址:</label>
-                <input type="url" id="url-maintenance-record" placeholder="https://..." required><br>
-
-                <label>機械查核保養 網址:</label>
-                <input type="url" id="url-check-maintain" placeholder="https://..." required><br>
-
-                <label>RM Warehouse 網址:</label>
-                <input type="url" id="url-rm-warehouse" placeholder="https://..." required><br>
-                
-                <button type="submit">儲存設定</button>
-                <button type="button" onclick="closeSettings()">取消/返回</button>
+                <button type="submit">儲存</button>
+                <button type="button" onclick="hideAddForm()">取消</button>
             </form>
-        </div>
-
-        <div class="button-grid" id="mainFeatures" style="display: none;">
-            
-            <button class="icon-btn" id="btn-machine-ng" data-key="machine-ng">
-                <i class="fas fa-exclamation-triangle fa-3x btn-icon-fa"></i>
-                <span>Machine-NG</span>
-            </button>
-
-            <button class="icon-btn" id="btn-5s-audit" data-key="5s-audit">
-                <i class="fas fa-clipboard-check fa-3x btn-icon-fa"></i>
-                <span>5S audit</span>
-            </button>
-            
-            <button class="icon-btn" id="btn-maintenance-record" data-key="maintenance-record">
-                <i class="fas fa-tools fa-3x btn-icon-fa"></i>
-                <span>機械維修紀錄</span>
-            </button>
-
-            <button class="icon-btn" id="btn-check-maintain" data-key="check-maintain">
-                <i class="fas fa-calendar-alt fa-3x btn-icon-fa"></i>
-                <span>機械查核保養</span>
-            </button>
-
-            <button class="icon-btn" id="btn-rm-warehouse" data-key="rm-warehouse">
-                <i class="fas fa-warehouse fa-3x btn-icon-fa"></i>
-                <span>RM Warehouse</span>
-            </button>
         </div>
         
     </div>
