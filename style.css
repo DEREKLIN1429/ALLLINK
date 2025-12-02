@@ -25,7 +25,7 @@ body {
     border-radius: 15px;
     box-shadow: 0 10px 30px var(--hover-shadow);
     width: 90%;
-    max-width: 1100px; /* 增加最大寬度以容納 4 欄 */
+    max-width: 1100px; /* 增加最大寬度 */
     text-align: center;
     border: 1px solid var(--primary-color);
 }
@@ -62,7 +62,6 @@ body {
     border-bottom: 1px solid var(--text-color-dark);
 }
 
-/* 修正: 使用 Flexbox 將歡迎訊息和按鈕分離 */
 .logout-control-bar {
     width: 100%;
     display: flex; 
@@ -70,11 +69,7 @@ body {
     align-items: center;
 }
 
-.welcome-text { 
-    font-size: 1.5em; 
-    font-weight: bold;
-    color: var(--accent-color); 
-}
+.welcome-text { font-size: 1.5em; font-weight: bold; color: var(--accent-color); }
 #logoutBtn {
     padding: 10px 20px;
     background-color: #dc3545; 
@@ -94,6 +89,7 @@ body {
 
 /* -------------------- GUEST 模式大按鈕 & ID 輸入美化 -------------------- */
 .mode-buttons-grid {
+    /* 登入區維持 3 欄佈局 */
     display: grid;
     grid-template-columns: repeat(3, 1fr); 
     gap: 30px;
@@ -129,7 +125,7 @@ body {
     border: 1px solid var(--primary-color);
 }
 
-/* 修正：ID 輸入欄位背景 (非黑色) */
+/* 修正：ID 輸入欄位背景 */
 #userIDInput {
     padding: 10px;
     border: 2px solid var(--accent-color); 
@@ -159,12 +155,12 @@ body {
     box-shadow: 0 8px 0 #111;
 }
 
-/* -------------------- USER/ADMIN 功能按鈕優化 (4 欄佈局) -------------------- */
+/* -------------------- USER/ADMIN 功能按鈕優化 (修正為 3 欄佈局) -------------------- */
 .button-grid, 
 .admin-button-grid {
-    /* 修正: 寬螢幕下使用 4 欄佈局 */
+    /* 修正: 寬螢幕下使用 3 欄佈局 */
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 25px; 
     padding-top: 30px;
 }
@@ -197,12 +193,11 @@ body {
     box-shadow: 0 0 15px rgba(40, 167, 69, 0.5);
 }
 .admin-button-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr); /* 修正為 3 欄 */
     gap: 20px;
     padding: 20px 0;
 }
 .admin-item-btn {
-    /* 修正: 確保在黑底上文字可見 */
     color: var(--text-color-light); 
     background: linear-gradient(135deg, #222, #000); 
     border: 2px solid var(--accent-color); 
@@ -255,7 +250,7 @@ body {
     color: white;
 }
 
-/* -------------------- Modal 內大按鈕優化 - 修正手機超出 -------------------- */
+/* -------------------- Modal 內大按鈕優化 - 修正佈局 -------------------- */
 .modal {
     z-index: 9999; 
     display: none; 
@@ -278,10 +273,35 @@ body {
     position: relative;
 }
 
-.modal-content label, 
+/* 修正: Modal 內部的輸入欄位佈局 */
+.input-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* 單欄佈局 */
+    gap: 15px;
+    margin-top: 20px;
+}
+.modal-content label {
+    text-align: left;
+    margin-bottom: -10px;
+    font-weight: bold;
+    color: var(--text-color-light);
+}
+
 .modal-content input, 
 .modal-content select {
-    font-size: 0.9em;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--accent-color);
+    border-radius: 4px;
+    background-color: #000;
+    color: var(--text-color-light);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 25px;
 }
 
 .modal-save-btn {
@@ -317,7 +337,7 @@ body {
         font-size: 0.8em;
     }
 
-    /* 所有 4 欄/3 欄佈局改為 1 欄佈局 */
+    /* 所有功能區塊在手機上改為 1 欄佈局 */
     .mode-buttons-grid, 
     .button-grid, 
     .admin-button-grid {
@@ -326,25 +346,11 @@ body {
         padding: 15px 0;
     }
     
-    /* 修正: 登入控制區佔滿 1 欄 */
+    /* 登入控制區佔滿 1 欄 */
     .login-controls {
         grid-column: 1 / span 1; 
         width: 100%;
         padding: 20px;
-    }
-    .mode-btn-login, #userIDInput {
-        width: 100%;
-        max-width: none;
-    }
-
-    /* 確保所有大按鈕維持立體感和可視性 */
-    .mode-btn, .icon-btn, .admin-item-btn {
-        min-height: 120px; 
-        font-size: 1em;
-        padding: 15px;
-    }
-    .btn-icon-fa {
-        font-size: 2.5em !important; 
     }
 
     /* Modal 調整 */
