@@ -61,23 +61,10 @@ body {
     border-bottom: 1px solid var(--text-color-dark);
 }
 
-.welcome-bar {
-    width: 100%;
-    text-align: left;
-    margin-bottom: 10px;
-    padding: 5px 0;
-}
+.welcome-bar { width: 100%; text-align: left; margin-bottom: 10px; padding: 5px 0; }
+.logout-control-bar { width: 100%; text-align: right; }
 
-.logout-control-bar {
-    width: 100%;
-    text-align: right; 
-}
-
-.welcome-text {
-    font-size: 1.5em; 
-    font-weight: bold;
-    color: var(--accent-color); 
-}
+.welcome-text { font-size: 1.5em; font-weight: bold; color: var(--accent-color); }
 #logoutBtn {
     padding: 10px 20px;
     background-color: #dc3545; 
@@ -132,7 +119,7 @@ body {
     border: 1px solid var(--primary-color);
 }
 
-/* 修正：ID 輸入欄位背景 */
+/* 修正：ID 輸入欄位背景 (非黑色) */
 #userIDInput {
     padding: 10px;
     border: 2px solid var(--accent-color); 
@@ -195,7 +182,8 @@ body {
     padding: 20px 0;
 }
 .admin-item-btn {
-    /* 黑色主體 + 綠色邊框 + 橘色立體底座 */
+    /* 修正: 確保在黑底上文字可見 */
+    color: var(--text-color-light); 
     background: linear-gradient(135deg, #222, #000); 
     border: 2px solid var(--accent-color); 
     box-shadow: 0 4px 0 var(--primary-color); 
@@ -249,7 +237,7 @@ body {
 
 /* -------------------- Modal 內大按鈕優化 -------------------- */
 .modal {
-    z-index: 9999; /* 確保 Modal 顯示在最上層 */
+    z-index: 9999; 
 }
 .modal-content {
     background-color: #111111;
@@ -264,4 +252,76 @@ body {
     background-color: var(--primary-color);
     color: var(--secondary-color);
     box-shadow: 0 4px 0 #cc7000;
+}
+
+/* ============================================= */
+/* 修正: 響應式設計 (手機畫面優化) */
+/* ============================================= */
+
+/* 當螢幕寬度小於 768px (常見平板/手機界線) */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        margin: 10px;
+    }
+
+    .header-container {
+        flex-direction: column; 
+        align-items: flex-start;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+    }
+    .author-info-header {
+        margin-top: 5px;
+        font-size: 0.8em;
+    }
+
+    /* 所有 3 欄佈局改為 1 欄佈局 */
+    .mode-buttons-grid, 
+    .button-grid, 
+    .admin-button-grid {
+        grid-template-columns: 1fr; 
+        gap: 20px;
+        padding: 20px 0;
+    }
+    
+    /* 修正: 登入控制區佔滿 1 欄 */
+    .login-controls {
+        grid-column: 1 / span 1; 
+        width: 100%;
+    }
+    .mode-btn-login, #userIDInput {
+        width: 100%;
+        max-width: none;
+    }
+
+    /* 確保所有大按鈕維持正方形和立體感 */
+    .mode-btn, .icon-btn, .admin-item-btn {
+        min-height: 150px;
+        font-size: 1.1em;
+        padding: 20px;
+    }
+    .icon-btn span {
+        margin-top: 5px;
+        font-size: 1em;
+    }
+    .btn-icon-fa {
+        font-size: 3em !important;
+    }
+
+    /* Modal 調整 */
+    .modal-content {
+        margin: 5% auto;
+        width: 95%;
+        padding: 15px;
+    }
+    .admin-controls {
+        display: flex; /* 確保按鈕在新行 */
+        justify-content: space-between;
+        flex-wrap: wrap; 
+        gap: 10px;
+    }
+    .admin-controls button {
+        width: 48%; /* 讓新增/退出按鈕並排 */
+    }
 }
