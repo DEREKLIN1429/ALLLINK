@@ -22,6 +22,9 @@ const ICON_OPTIONS = [
     { class: 'fas fa-chart-bar', name: '報告/圖表 (Chart)' },
     { class: 'fas fa-wrench', name: '機械/維護 (Wrench)' },
     { class: 'fas fa-users', name: '人員/團隊 (Users)' },
+    { class: 'fas fa-cogs', name: 'Mixing/Extrusion (Cogs)' },
+    { class: 'fas fa-compress-arrows-alt', name: 'Calendering (Press)' },
+    { class: 'fas fa-cut', name: 'Cutting (Scissors)' },
 ];
 
 const DEFAULT_LINKS = [
@@ -30,7 +33,12 @@ const DEFAULT_LINKS = [
     { id: 3, name: '機械維修紀錄', url: 'https://dereklin1429.github.io/repair-history/', icon: 'fas fa-tools' },
     { id: 4, name: '機械查核保養', url: 'https://dereklin1429.github.io/-MC-maintenance-check/', icon: 'fas fa-calendar-alt' },
     { id: 5, name: 'RM Warehouse 庫存', url: 'https://chiehs1429.github.io/RM-Warehouse/', icon: 'fas fa-warehouse' },
-    { id: 6, name: 'Extrusion-Inventory', url: 'https://chiehs1429.github.io/Extrusion_app/', icon: 'fas fa-chart-bar' }
+    { id: 6, name: 'Extrusion-Inventory', url: 'https://chiehs1429.github.io/Extrusion_app/', icon: 'fas fa-chart-bar' },
+    // 新增連結
+    { id: 7, name: 'Mixing', url: 'https://chiehs1429.github.io/Mixing/', icon: 'fas fa-cogs' },
+    { id: 8, name: 'Extrusion', url: 'https://chiehs1429.github.io/Extrusion_app/', icon: 'fas fa-cogs' },
+    { id: 9, name: 'Calendering', url: 'https://chiehs1429.github.io/Calendering/', icon: 'fas fa-compress-arrows-alt' },
+    { id: 10, name: 'CUTTING', url: 'https://chiehs1429.github.io/CUTTING-Inventory/', icon: 'fas fa-cut' }
 ];
 
 // =======================================================
@@ -142,7 +150,7 @@ function renderSettingsList() {
 
         // 修正點擊事件：確保點擊編輯/刪除按鈕時，事件不會向上傳播，防止 Modal 衝突。
         item.addEventListener('click', (e) => {
-            // 檢查點擊是否來自動作按鈕區域以外
+            // 檢查點擊是否來自動作按鈕區域 (admin-item-actions) 以外
             if (e.target.closest('.admin-item-actions') === null) {
                 editLink(link.id);
             }
