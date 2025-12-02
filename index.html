@@ -3,87 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">生產智能系統彙整 登入 | Production Intelligence System Login</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>工作站功能介面</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body onload="initPage()">
+<body>
     <div class="container">
-        <div class="header-container">
-            <h1 id="mainHeader">生產智能系統彙整 登入 | Production Intelligence System Login</h1>
-            <span class="author-info-header">Author: DEREK LIN</span>
+        <h1>🛠️ 工作站功能選單</h1>
+
+        <div class="id-input-section">
+            <label for="userID">輸入您的 ID：</label>
+            <input type="text" id="userID" placeholder="請輸入 ID">
+            <button id="confirmBtn" onclick="checkID()">確認</button>
         </div>
 
-        <div class="mode-buttons-grid" id="modeSelectSection">
-            <div class="login-controls">
-                <label for="userIDInput">請輸入 ID (Enter ID)：</label>
-                <input type="text" id="userIDInput" placeholder="輸入您的 ID">
-                <button class="mode-btn mode-btn-login" onclick="handleLogin()">登入 | Login</button>
-            </div>
-            
-            <button class="mode-btn mode-btn-admin" onclick="showAdminPrompt()">
-                <i class="fas fa-lock fa-4x"></i>
-                <span>管理設定 | Admin Setup</span>
-            </button>
-            
-            <button class="mode-btn mode-btn-exit" onclick="alert('請關閉瀏覽器或重新整理頁面。')">
-                <i class="fas fa-sign-out-alt fa-4x"></i>
-                <span>退出 | Exit</span>
-            </button>
-        </div>
+        <hr>
 
-        <div id="logoutSection" style="display: none;">
-            <div class="welcome-bar">
-                <span id="welcomeMessage" class="welcome-text"></span>
-            </div>
-            <div class="logout-control-bar">
-                <button id="logoutBtn" onclick="handleLogout()">登出 | Logout</button>
-            </div>
-        </div>
-
-        <hr id="hrDivider" style="display: none;">
-        
         <div class="button-grid" id="mainFeatures" style="display: none;">
-            </div>
+            <button class="icon-btn" id="btn-machine-ng" data-url="https://your.machine.ng.link">
+                <img src="placeholder_machine_ng.png" alt="Machine-NG" class="btn-icon">
+                <span>Machine-NG</span>
+            </button>
 
-        <div class="settings-section" id="settingsPanel" style="display: none;">
-            <h2>⚙️ 網址連結設定 (管理員模式) | URL Link Settings (Admin Mode)</h2>
+            <button class="icon-btn" id="btn-5s-audit" data-url="https://your.5s.audit.link">
+                <img src="placeholder_5s_audit.png" alt="5S audit" class="btn-icon">
+                <span>5S audit</span>
+            </button>
             
-            <div id="urlListContainer" class="admin-button-grid">
-            </div>
-            
-            <div class="admin-controls">
-                <button id="addNewBtn" onclick="showAddForm()">新增網址 | Add New</button>
-                <button id="exitSettingsBtn" onclick="exitAdminView()">退出設定模式 | Exit Admin Mode</button>
-            </div>
+            <button class="icon-btn" id="btn-maintenance-record" data-url="https://your.maintenance.record.link">
+                <img src="placeholder_record.png" alt="機械維修紀錄" class="btn-icon">
+                <span>機械維修紀錄</span>
+            </button>
+
+            <button class="icon-btn" id="btn-check-maintain" data-url="https://your.check.maintain.link">
+                <img src="placeholder_check.png" alt="機械查核保養" class="btn-icon">
+                <span>機械查核保養</span>
+            </button>
+
+            <button class="icon-btn" id="btn-rm-warehouse" data-url="https://your.rm.warehouse.link">
+                <img src="placeholder_rm_warehouse.png" alt="RM Warehouse" class="btn-icon">
+                <span>RM Warehouse</span>
+            </button>
         </div>
         
     </div>
 
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="hideAddForm()">&times;</span>
-            <form id="editUrlForm" class="edit-form">
-                <input type="hidden" id="edit-id">
-                <h3><span id="modalTitle">新增/修改連結 | Add/Edit Link</span></h3>
-                
-                <label for="edit-name">按鈕名稱 (作為連結描述) | Button Name:</label>
-                <input type="text" id="edit-name" required placeholder="例如：Machine-NG 報修"><br>
-
-                <label for="edit-url">網址連結 | URL Link:</label>
-                <input type="url" id="edit-url" required placeholder="https://your.link.com/page"><br>
-
-                <label for="edit-icon">圖示 (Font Awesome Icon Class) | Icon Class:</label>
-                <select id="edit-icon"></select><br>
-                
-                <div class="modal-actions">
-                    <button type="submit" class="modal-save-btn">儲存 | Save</button>
-                    <button type="button" class="modal-cancel-btn" onclick="hideAddForm()">取消 | Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
     <script src="script.js"></script>
 </body>
 </html>
