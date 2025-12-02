@@ -9,7 +9,10 @@
 </head>
 <body onload="initPage()">
     <div class="container">
-        <h1 id="mainHeader">生產智能系統彙整 登入 | Production Intelligence System Login</h1>
+        <div class="header-container">
+            <h1 id="mainHeader">生產智能系統彙整 登入 | Production Intelligence System Login</h1>
+            <span class="author-info-header">Author: DEREK LIN</span>
+        </div>
 
         <div class="mode-selection-section" id="loginSection">
             <label for="passwordInput">請輸入 ID (Enter ID)：</label>
@@ -26,7 +29,7 @@
 
         <hr>
         
-        <div class="button-grid" id="mainFeatures">
+        <div class="button-grid" id="mainFeatures" style="display: none;">
             </div>
 
         <div class="settings-section" id="settingsPanel" style="display: none;">
@@ -35,7 +38,7 @@
                 </div>
             
             <button id="addNewBtn" onclick="showAddForm()">新增網址 | Add New</button>
-            <button id="exitSettingsBtn" onclick="handleLogout()">退出設定模式 | Exit Admin Mode</button>
+            <button id="exitSettingsBtn" onclick="exitAdminView()">退出設定模式 | Exit Admin Mode</button>
             
             <form id="editUrlForm" class="edit-form" style="display: none;">
                 <input type="hidden" id="edit-id">
@@ -48,7 +51,8 @@
                 <input type="url" id="edit-url" required placeholder="https://your.link.com/page"><br>
 
                 <label for="edit-icon">圖示 (Font Awesome Icon Class) | Icon Class:</label>
-                <input type="text" id="edit-icon" placeholder="例如：fas fa-tools (可選 | Optional)"><br>
+                <select id="edit-icon">
+                    </select><br>
                 
                 <button type="submit">儲存 | Save</button>
                 <button type="button" onclick="hideAddForm()">取消 | Cancel</button>
@@ -56,10 +60,6 @@
         </div>
         
     </div>
-
-    <footer class="author-info">
-        Author: DEREK LIN
-    </footer>
 
     <script src="script.js"></script>
 </body>
