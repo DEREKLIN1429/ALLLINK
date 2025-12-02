@@ -96,6 +96,7 @@ function renderUserButtons() {
             <span>${link.name}</span>
         `;
         
+        // 使用者模式點擊後直接連結
         button.addEventListener('click', () => {
              if (link.url) {
                 window.open(link.url, '_blank');
@@ -141,7 +142,8 @@ function renderSettingsList() {
 
         // 點擊整個大按鈕，直接彈出編輯介面
         item.addEventListener('click', (e) => {
-            if (e.target.tagName !== 'BUTTON') {
+            // 排除點擊內部的按鈕和其內容
+            if (e.target.tagName !== 'BUTTON' && e.target.closest('.admin-item-actions') === null) {
                 editLink(link.id);
             }
         });
@@ -334,7 +336,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('editUrlForm').addEventListener('submit', handleFormSubmit);
     initPage();
 
-    // 關閉 Modal 的額外處理：點擊 Modal 外的區域
     window.onclick = function(event) {
       const modal = document.getElementById('editModal');
       if (event.target == modal) {
