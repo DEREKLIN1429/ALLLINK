@@ -296,16 +296,18 @@ function exitAdminView() {
     alert('已退出管理員設定畫面 (Exited Admin Setup View)。');
 }
 
-function handleLogout(clearID = true) {
+function handleLogout(clearID = false) { 
     if (clearID) {
         localStorage.removeItem(USER_ID_KEY);
         currentUserID = '';
     }
 
+    const savedID = localStorage.getItem(USER_ID_KEY) || '';
+
     currentMode = 'GUEST';
     setTitles('GUEST');
     
-    document.getElementById('userIDInput').value = currentUserID;
+    document.getElementById('userIDInput').value = savedID;
 
     document.getElementById('modeSelectSection').style.display = 'grid'; 
     document.getElementById('logoutSection').style.display = 'none';
@@ -314,7 +316,7 @@ function handleLogout(clearID = true) {
     document.getElementById('hrDivider').style.display = 'none';
 }
 
-function enterSettingsMode() {
+function enterSettingsMode(userID) {
     currentMode = 'ADMIN';
     setTitles('ADMIN');
     
