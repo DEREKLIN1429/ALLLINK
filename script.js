@@ -1,5 +1,5 @@
 // =======================================================
-// 全域變數/常數 (保持不變)
+// 全域變數/常數
 // =======================================================
 const TITLE_LOGIN = '生產智能系統彙整 登入 | Production Intelligence System Login';
 const TITLE_USER_MODE = '生產智能系統彙整 | Production Intelligence System Integration';
@@ -12,7 +12,6 @@ let currentLinks = [];
 let currentMode = 'GUEST'; 
 let currentUserID = ''; 
 
-// ... (ICON_OPTIONS, DEFAULT_LINKS 保持與上個版本一致)
 const ICON_OPTIONS = [
     { class: 'fas fa-link', name: '預設/連結 (Link)' },
     { class: 'fas fa-exclamation-triangle', name: '警示/報修 (Warning)' },
@@ -35,7 +34,7 @@ const DEFAULT_LINKS = [
 ];
 
 // =======================================================
-// 函數：標題控制 & 儲存/載入 (保持不變)
+// 函數：標題控制 & 儲存/載入
 // =======================================================
 function setTitles(mode) {
     const header = document.getElementById('mainHeader');
@@ -70,7 +69,6 @@ function loadLinks() {
 function saveLinks() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(currentLinks));
 }
-
 
 // =======================================================
 // 函數：動態渲染 (使用者模式 & 管理模式)
@@ -128,9 +126,6 @@ function populateIconSelect(selectedValue = '') {
     });
 }
 
-/**
- * 渲染設定模式下的網址清單 (大按鈕模式，一列 3 個)
- */
 function renderSettingsList() { 
     const container = document.getElementById('urlListContainer');
     container.innerHTML = ''; 
@@ -142,11 +137,10 @@ function renderSettingsList() {
 
     currentLinks.forEach(link => {
         const item = document.createElement('div');
-        item.className = 'admin-item-btn'; // 使用大按鈕樣式
+        item.className = 'admin-item-btn'; 
 
         // 點擊整個大按鈕，直接彈出編輯介面
         item.addEventListener('click', (e) => {
-            // 避免點擊子按鈕（編輯/刪除）時觸發兩次 Modal
             if (e.target.tagName !== 'BUTTON') {
                 editLink(link.id);
             }
@@ -178,7 +172,6 @@ function showAddForm(id = null) {
     modal.style.display = 'block';
 
     if (id !== null) {
-        // 修改模式
         formTitle.textContent = '修改連結 | Edit Link';
         const link = currentLinks.find(l => l.id === id);
         if (link) {
@@ -188,7 +181,6 @@ function showAddForm(id = null) {
             selectedIconClass = link.icon || '';
         }
     } else {
-        // 新增模式
         formTitle.textContent = '新增連結 | Add New Link';
         document.getElementById('edit-id').value = '';
         nameInput.value = '';
@@ -211,21 +203,19 @@ function handleFormSubmit(e) {
     const icon = document.getElementById('edit-icon').value.trim(); 
 
     if (id) {
-        // 修改
         const index = currentLinks.findIndex(l => l.id === parseInt(id));
         if (index !== -1) {
             currentLinks[index] = { id: parseInt(id), name, url, icon };
         }
         alert(`連結 ${name} 已修改！`);
     } else {
-        // 新增
         const newId = currentLinks.length > 0 ? Math.max(...currentLinks.map(l => l.id)) + 1 : 1;
         currentLinks.push({ id: newId, name, url, icon });
         alert(`連結 ${name} 已新增！`);
     }
 
     saveLinks(); 
-    renderUserButtons(); // 新增/修改後，更新使用者介面按鈕
+    renderUserButtons(); 
     renderSettingsList(); 
     hideAddForm(); 
 }
@@ -239,7 +229,7 @@ function deleteLink(id) {
     if (link && confirm(`確定要刪除連結 "${link.name}" 嗎？`)) {
         currentLinks = currentLinks.filter(l => l.id !== id);
         saveLinks();
-        renderUserButtons(); // 刪除後，更新使用者介面按鈕
+        renderUserButtons(); 
         renderSettingsList();
         alert(`連結 ${link.name} 已刪除。`);
     }
@@ -247,8 +237,9 @@ function deleteLink(id) {
 
 
 // =======================================================
-// 函數：模式切換 (登入/登出) - 保持不變
+// 函數：模式切換 (登入/登出)
 // =======================================================
+
 function initPage() {
     loadLinks();
     renderUserButtons();
