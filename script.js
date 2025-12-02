@@ -140,9 +140,8 @@ function renderSettingsList() {
         const item = document.createElement('div');
         item.className = 'admin-item-btn'; 
 
-        // 點擊整個大按鈕，直接彈出編輯介面
+        // 點擊整個大按鈕，排除點擊動作按鈕時，彈出編輯介面
         item.addEventListener('click', (e) => {
-            // 排除點擊內部的按鈕和其內容
             if (e.target.tagName !== 'BUTTON' && e.target.closest('.admin-item-actions') === null) {
                 editLink(link.id);
             }
