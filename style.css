@@ -90,7 +90,7 @@ body {
 
 /* -------------------- GUEST 模式大按鈕 -------------------- */
 .mode-buttons-grid {
-    /* 恢復原始的 3 欄佈局 */
+    /* 登入區維持 3 欄佈局 */
     display: grid;
     grid-template-columns: repeat(3, 1fr); 
     gap: 30px;
@@ -122,7 +122,7 @@ body {
 /* -------------------- USER 功能按鈕優化 (修正為 3 欄佈局) -------------------- */
 .button-grid, 
 .admin-button-grid {
-    /* 恢復原始 3 欄佈局 */
+    /* 修正: 寬螢幕下使用 3 欄佈局 (寬度縮減 10%) */
     display: grid;
     grid-template-columns: repeat(3, minmax(200px, 0.20fr)); /* 減少按鈕佔比 */
     gap: 40px; /* 增加間距 */
@@ -176,7 +176,7 @@ body {
 
 /* 管理控制按鈕樣式 */
 .admin-controls {
-    /* 縱向 (column) 排列 */
+    /* 【關鍵修正】: 橫向 (row) 改為縱向 (column) 排列 */
     display: flex;
     flex-direction: column; 
     gap: 5px; /* 縮小按鈕之間的間距 */
