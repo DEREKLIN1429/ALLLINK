@@ -88,7 +88,7 @@ body {
     transform: translateY(0);
 }
 
-/* -------------------- GUEST 模式大按鈕 & ID 輸入美化 -------------------- */
+/* -------------------- GUEST 模式大按鈕 -------------------- */
 .mode-buttons-grid {
     /* 登入區維持 3 欄佈局 */
     display: grid;
@@ -119,28 +119,7 @@ body {
     font-size: 1.5em; 
 }
 
-/* 登入控制區優化 */
-.login-controls {
-    grid-column: 1 / span 2; 
-    background: linear-gradient(145deg, #181818, #303030); 
-    border: 1px solid var(--primary-color);
-}
-
-/* 修正：ID 輸入欄位加高 50% */
-#userIDInput {
-    padding: 15px; /* 加高約 50% */
-    border: 2px solid var(--accent-color); 
-    border-radius: 6px;
-    font-size: 18px;
-    background-color: #3f3f3f; 
-    color: var(--text-color-light);
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.7); 
-    margin-bottom: 20px;
-    width: 80%;
-    max-width: 300px;
-}
-
-/* -------------------- USER/ADMIN 功能按鈕優化 (修正為 3 欄佈局) -------------------- */
+/* -------------------- USER 功能按鈕優化 (修正為 3 欄佈局) -------------------- */
 .button-grid, 
 .admin-button-grid {
     /* 修正: 寬螢幕下使用 3 欄佈局 (寬度縮減 10%) */
@@ -174,11 +153,68 @@ body {
     font-size: 2em !important; 
 }
 
-/* -------------------- ADMIN 頁面清單 (大按鈕模式美化) -------------------- */
+/* -------------------- ADMIN 頁面控制區佈局優化 (新增與退出按鈕) -------------------- */
 .settings-section {
     box-shadow: 0 0 15px rgba(40, 167, 69, 0.5);
+    margin-top: 0; 
 }
-.admin-button-grid { /* 佈局修正已在上方合併 */ }
+
+/* 新增的容器，用於標題和控制按鈕的 Flex 佈局 */
+.settings-header-controls {
+    display: flex;
+    justify-content: space-between; /* 讓標題和按鈕分別在兩端 */
+    align-items: center; /* 垂直居中對齊 */
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--text-color-dark);
+}
+
+.settings-header-controls h2 {
+    /* 確保標題不會被按鈕擠壓 */
+    margin: 0;
+    font-size: 1.5em; 
+    white-space: nowrap; /* 避免標題換行，保持單行顯示 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 管理控制按鈕樣式 */
+.admin-controls {
+    display: flex; /* 讓按鈕在水平方向排列 */
+    gap: 10px;
+    flex-wrap: nowrap; /* 預設不換行 */
+}
+
+.admin-controls button {
+    padding: 10px 15px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap; /* 避免按鈕文字換行 */
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+#addNewBtn {
+    background-color: var(--accent-color); /* 綠色 */
+    color: white;
+    box-shadow: 0 4px 0 #1e7e34;
+}
+
+#exitSettingsBtn {
+    background-color: #dc3545; /* 紅色 */
+    color: white;
+    box-shadow: 0 4px 0 #b02a37;
+}
+
+.admin-controls button:hover {
+    transform: translateY(0);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* -------------------- ADMIN 頁面清單 (大按鈕模式美化) -------------------- */
 .admin-item-btn {
     color: var(--button-text-color); 
     background: linear-gradient(145deg, var(--button-bg), #eeeeee);
@@ -329,19 +365,6 @@ body {
         padding: 15px 0;
     }
     
-    /* 登入控制區佔滿 1 欄 */
-    .login-controls {
-        grid-column: 1 / span 1; 
-        width: 100%;
-    }
-
-    /* Modal 調整 */
-    .modal-content {
-        width: 98%; 
-        padding: 10px;
-        font-size: 0.9em;
-    }
-    
     /* 確保所有大按鈕維持高度縮減和字體加大 */
     .mode-btn, .icon-btn, .admin-item-btn {
         aspect-ratio: 2 / 1; 
@@ -353,20 +376,45 @@ body {
         font-size: 2em !important; 
     }
 
+    /* Admin Setting Header 手機優化 */
+    .settings-header-controls {
+        flex-direction: column; /* 改為垂直排列 */
+        align-items: flex-start; /* 左對齊 */
+        gap: 15px; /* 增加間距 */
+    }
+
+    .settings-header-controls h2 {
+        width: 100%; /* 標題佔滿一行 */
+        text-align: left;
+        font-size: 1.2em;
+    }
+    
+    .admin-controls {
+        width: 100%;
+        display: flex; /* 保持 Flex 佈局 */
+        justify-content: space-between; /* 讓按鈕在兩端對齊 */
+        flex-wrap: wrap; /* 允許按鈕換行 */
+    }
+    
+    .admin-controls button {
+        /* 在手機上讓按鈕佔滿一半寬度，避免超出，並在空間不足時換行 */
+        width: 48%; 
+        box-sizing: border-box; 
+        font-size: 0.9em;
+    }
+
+    /* Modal 調整 */
+    .modal-content {
+        width: 98%; 
+        padding: 10px;
+        font-size: 0.9em;
+    }
+    
     .modal-actions {
         flex-direction: column; 
         gap: 10px;
     }
     .modal-actions button {
         width: 100%;
-    }
-    .admin-controls {
-        display: flex; 
-        justify-content: space-between;
-        flex-wrap: wrap; 
-        gap: 10px;
-    }
-    .admin-controls button {
-        width: 48%; 
     }
 }
