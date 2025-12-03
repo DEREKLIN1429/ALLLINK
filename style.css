@@ -90,32 +90,45 @@ body {
 
 /* -------------------- GUEST 模式大按鈕 & ID 輸入美化 -------------------- */
 .mode-buttons-grid {
+    /* 登入區維持 3 欄佈局 */
     display: grid;
     grid-template-columns: repeat(3, 1fr); 
     gap: 30px;
     padding: 40px 0;
 }
 
+/* 移除 ID 登入後，讓新的「進入系統」按鈕佔據兩欄空間 */
+.login-controls-simplified {
+    grid-column: 1 / span 2; 
+    /* 確保寬扁比例和字體大小 */
+    aspect-ratio: 4 / 1; 
+    font-size: 2em !important; 
+}
+
 .mode-btn {
-    /* 修正: 高度減少 50% */
-    aspect-ratio: 2 / 1; 
+    /* 寬扁比例 */
+    aspect-ratio: 2 / 1; /* 恢復單個按鈕的比例 */
     padding: 20px; 
-    font-size: 1.8em; 
+    font-size: 1.8em; /* 字體加大 50% */
+    /* ... 保持其他樣式不變 ... */
+}
+/* ... 刪除原有的 .login-controls 樣式 (如果您保留了原始的 CSS 文件，請確保該樣式塊被忽略或移除) ... */
+
+/* 確保手機響應式時，按鈕仍然是 1 欄 */
+@media (max-width: 768px) {
+    /* ... (其他樣式不變) ... */
     
-    /* 修正: 橘白配色 */
-    background: linear-gradient(145deg, var(--button-bg), #eeeeee);
-    color: var(--button-text-color);
-    border: 1px solid var(--primary-color);
-    box-shadow: 0 4px 0 var(--primary-color); 
-    transform: translateY(-2px);
-}
-.mode-btn:hover {
-    transform: translateY(0); 
-    box-shadow: 0 2px 0 var(--primary-color);
-}
-.mode-btn i {
-    color: var(--primary-color); 
-    font-size: 1.5em; 
+    .mode-buttons-grid {
+        grid-template-columns: 1fr; /* 修正為 1 欄 */
+    }
+    
+    /* 讓簡化後的進入系統按鈕在手機上只佔 1 欄 */
+    .login-controls-simplified {
+        grid-column: 1 / span 1; 
+        aspect-ratio: 2 / 1; /* 手機上變為標準比例 */
+        font-size: 1.5em !important;
+    }
+    /* ... (其餘媒體查詢樣式保持不變) ... */
 }
 
 /* 登入控制區優化 */
@@ -364,3 +377,4 @@ body {
         width: 48%; 
     }
 }
+
