@@ -3,7 +3,7 @@
 // =======================================================
 const TITLE_LOGIN = '生產智能系統彙整 登入 | Production Intelligence System Login';
 const TITLE_USER_MODE = '生產智能系統彙整 | Production Intelligence System Integration';
-const TITLE_ADMIN_MODE = '🛠️ 網址連結設定 (管理員模式)'; // 簡化標題
+const TITLE_ADMIN_MODE = '🛠️ 網址連結設定 (管理員模式)'; // 保持這個，因為它控制瀏覽器標題
 const ADMIN_PASSWORD = '12345'; // ⚠️ 注意：在前端硬編碼密碼非常不安全，僅供測試用途。
 
 const STORAGE_KEY = 'factory_links_data';
@@ -56,7 +56,9 @@ function setTitles(mode) {
             pageTitle.textContent = TITLE_USER_MODE;
             break;
         case 'ADMIN':
-            header.textContent = TITLE_ADMIN_MODE;
+            // 由於 HTML 中已移除 h2 標籤，這裡只需確保 header 顯示 Admin 相關的訊息
+            // 這裡使用更簡潔的標題，因為 h2 標題已移除
+            header.textContent = '管理員模式 | Admin Mode'; 
             pageTitle.textContent = TITLE_ADMIN_MODE;
             break;
     }
