@@ -1,68 +1,71 @@
 // =======================================================
-// 函數：精簡的常數 (只保留必要的)
-// =======================================================
-const TITLE_STATIC = '生產作業系統彙整 | PIS Integration';
-const DEREK_ID = 10;
-const LAI_ID = 11;
-
-// 只需要這兩個連結的資料
-const FIXED_LINKS = [
-    { id: DEREK_ID, name: 'DEREK Notes\n筆記彙整', url: 'https://dereklin1429.github.io/DEREK-Notes/', icon: 'fas fa-book' },
-    { id: LAI_ID, name: '賴桑記事本\n記事本', url: 'https://dereklin1429.github.io/LAI/', icon: 'fas fa-feather-alt' },
-];
-
-
-// =======================================================
-// 函數：只渲染固定按鈕
+// 函數：模式切換 (統一控制顯示/隱藏)
 // =======================================================
 
-function renderFixedButtons() {
-    const grid = document.getElementById('mainFeatures');
-    grid.innerHTML = '';    // 清空舊內容
+function updateUI(mode) {
+    // 儲存當前模式
+    currentMode = mode;
+    setTitles(mode);
+
+    // 取得所有主要 UI 區塊
+    const modeSelect = document.getElementById('modeSelectSection');
+    const logout = document.getElementById('logoutSection');
+    const mainFeatures = document.getElementById('mainFeatures');
+    const settingsPanel = document.getElementById('settingsPanel');
+    const hrDivider = document.getElementById('hrDivider');
     
-    // 【關鍵邏輯】確保 grid 顯示為網格
-    grid.style.display = 'grid'; 
+    // 重設所有區塊顯示狀態為隱藏
+    modeSelect.style.display = 'none';
+    logout.style.display = 'none';
+    mainFeatures.style.display = 'none';
+    settingsPanel.style.display = 'none';
+    hrDivider.style.display = 'none';
 
-    FIXED_LINKS.forEach(link => {
-        const button = document.createElement('button');
-        button.className = 'icon-btn';
-        button.id = `btn-${link.id}`;
-        button.title = `${link.name}\n${link.url}`; 
-        
-        const iconClass = link.icon && link.icon.trim() !== '' ? link.icon : 'fas fa-link';
-
-        button.innerHTML = `
-            <i class="${iconClass} fa-3x btn-icon-fa"></i>
-            <span>${link.name}</span>
-        `;
-        
-        // 點擊後直接開啟連結
-        button.addEventListener('click', () => {
-             if (link.url) {
-                 window.open(link.url, '_blank');
-             }
-        });
-
-        grid.appendChild(button);
-    });
+    // 根據模式設定顯示狀態
+    switch (mode) {
+        case 'GUEST':
+            modeSelect.style.display = 'grid';
+            break;
+        case 'USER':
+            logout.style.display = 'flex';
+            mainFeatures.style.display = 'grid';
+            hrDivider.style.display = 'block';
+            break;
+        case 'ADMIN':
+            settingsPanel.style.display = 'block';
+            hrDivider.style.display = 'block';
+            renderSettingsList();
+            break;
+    }
 }
 
+// =======================================================
+// 函數：模式切換 (公開調用) - 引用上述新函數
+// =======================================================
 
-// =======================================================
-// 函數：初始化 (只設置標題和渲染按鈕)
-// =======================================================
 function initPage() {
-    // 設置固定標題
-    document.getElementById('mainHeader').textContent = TITLE_STATIC;
-    document.getElementById('pageTitle').textContent = TITLE_STATIC;
-    
-    // 渲染兩個固定按鈕
-    renderFixedButtons();
+    loadLinks();
+    renderUserButtons();
+    updateUI('GUEST'); // 使用新的統一函數
+    // 其餘不變
 }
 
+function handleLogout(clearID = false) { 
+    if (clearID) {
+        localStorage.removeItem(USER_ID_KEY);
+        currentUserID = '';
+    }
+    updateUI('GUEST'); // 使用新的統一函數
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-    initPage();
-});
+function enterSettingsMode() {
+    updateUI('ADMIN'); // 使用新的統一函數
+}
 
-// 移除所有模式切換、彩蛋、CRUD 函數，使程式碼極簡化
+function enterUserMode() { 
+    updateUI('USER'); // 使用新的統一函數
+    
+    // 保持 welcomeMessage 的邏輯不變
+    const actualUserID = '訪客';
+    document.getElementById('welcomeMessage').textContent = `歡迎, ${actualUserID} (Welcome, ${actualUserID})`;
+}
