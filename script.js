@@ -12,15 +12,7 @@ let currentLinks = [];
 let currentMode = 'GUEST'; 
 let currentUserID = ''; 
 
-// 新增：退出連結的儲存鍵
-const EXIT_STORAGE_KEY = 'factory_exit_links_data';
-let exitLinks = [];
-
-// 新增：預設的退出連結
-const DEFAULT_EXIT_LINKS = [
-    { id: 101, name: 'DEREK-Notes\n筆記本', url: 'https://dereklin1429.github.io/DEREK-Notes/' },
-    { id: 102, name: '賴桑記事本\nLAI Notes', url: 'https://dereklin1429.github.io/LAI/' },
-];
+// 移除 EXIT_STORAGE_KEY 和 exitLinks 相關變數
 
 const ICON_OPTIONS = [
     { class: 'fas fa-link', name: '預設/連結 (Link)' },
@@ -35,8 +27,11 @@ const ICON_OPTIONS = [
     { class: 'fas fa-cogs', name: 'Mixing/Extrusion (Cogs)' },
     { class: 'fas fa-compress-arrows-alt', name: 'Calendering (Press)' },
     { class: 'fas fa-cut', name: 'Cutting (Scissors)' },
+    { class: 'fas fa-book', name: '筆記本 (Book)' }, // DEREK Notes Icon
+    { class: 'fas fa-clipboard-list', name: '記事本 (List)' }, // 賴桑記事本 Icon
 ];
 
+// 合併後的 DEFAULT_LINKS，包含所有連結
 const DEFAULT_LINKS = [
     { id: 1, name: 'Machine-NG\n機械故障', url: 'https://dereklin1429.github.io/Machine-NG/', icon: 'fas fa-exclamation-triangle' },
     { id: 2, name: '5S Audit\n5S 查核', url: 'https://dereklin1429.github.io/5S-audit/', icon: 'fas fa-clipboard-check' },
@@ -47,6 +42,9 @@ const DEFAULT_LINKS = [
     { id: 7, name: 'Extrusion\n押出工程', url: 'https://chiehs1429.github.io/Extrusion_app/', icon: 'fas fa-cogs' },
     { id: 8, name: 'Calendering\n上膠工程', url: 'https://chiehs1429.github.io/Calendering/', icon: 'fas fa-compress-arrows-alt' },
     { id: 9, name: 'CUTTING\n裁斷工程', url: 'https://chiehs1429.github.io/CUTTING-Inventory/', icon: 'fas fa-cut' },
+    // DEREK NOTES 和 賴桑記事本 (現在是主要功能的一部分)
+    { id: 10, name: 'DEREK-Notes\n筆記本', url: 'https://dereklin1429.github.io/DEREK-Notes/', icon: 'fas fa-book' },
+    { id: 11, name: '賴桑記事本\nLAI Notes', url: 'https://dereklin1429.github.io/LAI/', icon: 'fas fa-clipboard-list' },
 ];
 
 // =======================================================
@@ -66,7 +64,6 @@ function setTitles(mode) {
             pageTitle.textContent = TITLE_USER_MODE;
             break;
         case 'ADMIN':
-            // 由於 HTML 中已移除 h2 標籤，這裡只需確保 header 顯示 Admin 相關的訊息
             header.textContent = '管理員模式 | Admin Mode'; 
             pageTitle.textContent = TITLE_ADMIN_MODE;
             break;
@@ -81,21 +78,13 @@ function loadLinks() {
         currentLinks = DEFAULT_LINKS;
     }
     currentUserID = localStorage.getItem(USER_ID_KEY) || '';
-
-    // 新增：載入退出連結
-    const exitData = localStorage.getItem(EXIT_STORAGE_KEY);
-    if (exitData) {
-        exitLinks = JSON.parse(exitData);
-    } else {
-        exitLinks = DEFAULT_EXIT_LINKS;
-    }
+    // 移除：載入退出連結的邏輯
 }
 
 function saveLinks() {
     localStorage.setItem(USER_ID_KEY, currentUserID); 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(currentLinks));
-    // 新增：儲存退出連結
-    localStorage.setItem(EXIT_STORAGE_KEY, JSON.stringify(exitLinks));
+    // 移除：儲存退出連結的邏輯
 }
 
 // =======================================================
@@ -137,32 +126,7 @@ function renderUserButtons() {
     });
 }
 
-// 新增：渲染 EXIT 連結
-function renderExitButtons() {
-    const container = document.getElementById('exitLinksContainer');
-    container.innerHTML = ''; 
-
-    exitLinks.forEach(link => {
-        const button = document.createElement('button');
-        button.className = 'mode-btn mode-btn-exit'; // 保持舊的 Exit 樣式
-        button.title = `${link.name}\n${link.url}`; 
-        
-        button.innerHTML = `
-            <i class="fas fa-sign-out-alt fa-4x"></i>
-            <span>${link.name.replace('\n', ' ')}</span>
-        `;
-        
-        // 點擊後直接導向新頁面
-        button.addEventListener('click', () => {
-             if (link.url) {
-                window.open(link.url, '_blank');
-            }
-        });
-
-        container.appendChild(button);
-    });
-}
-
+// 移除：renderExitButtons 函數，不再需要
 
 function populateIconSelect(selectedValue = '') {
     const select = document.getElementById('edit-icon');
@@ -310,12 +274,8 @@ function initPage() {
     document.getElementById('settingsPanel').style.display = 'none';
     document.getElementById('logoutSection').style.display = 'none';
     document.getElementById('hrDivider').style.display = 'none';
-
-    // 渲染退出連結按鈕
-    renderExitButtons();
 }
 
-// 修正：增加 mode 參數來判斷是進入設定還是新增連結
 function showAdminPrompt(mode) {
     // !! 安全性警告 !!：...
     const password = prompt("請輸入管理員密碼 (Enter Admin Password)：\n(注意：此密碼在前端程式碼中寫死，僅供測試用途)");
