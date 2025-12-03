@@ -88,37 +88,17 @@ body {
     transform: translateY(0);
 }
 
-/* -------------------- GUEST 模式大按鈕 -------------------- */
+/* -------------------- GUEST 模式大按鈕 (修改為單按鈕居中) -------------------- */
 .mode-buttons-grid {
-    /* 登入區維持 3 欄佈局 */
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); 
+    /* 【修正點】改為 Flex 佈局並居中，只容納一個按鈕 */
+    display: flex; /* 確保 Flex 佈局 */
+    justify-content: center; /* 水平居中 */
+    align-items: center;
     gap: 30px;
-    padding: 40px 0;
+    padding: 20px 0; /* 縮小間距 */
 }
 
-.mode-btn {
-    /* 寬扁比例 */
-    aspect-ratio: 2 / 1; 
-    padding: 20px; 
-    font-size: 1.8em; /* 字體加大 50% */
-    
-    /* 橘白配色 */
-    background: linear-gradient(145deg, var(--button-bg), #eeeeee);
-    color: var(--button-text-color);
-    border: 1px solid var(--primary-color);
-    box-shadow: 0 4px 0 var(--primary-color); 
-    transform: translateY(-2px);
-}
-.mode-btn:hover {
-    transform: translateY(0); 
-    box-shadow: 0 4px 0 var(--primary-color);
-}
-.mode-btn i {
-    color: var(--primary-color); 
-    font-size: 1.5em; 
-}
-
+/* ... (其餘 .mode-btn 樣式保持不變) ... */
 /* -------------------- USER 功能按鈕優化 (修正為 3 欄佈局) -------------------- */
 .button-grid, 
 .admin-button-grid {
@@ -420,3 +400,4 @@ body {
         width: 100%;
     }
 }
+
