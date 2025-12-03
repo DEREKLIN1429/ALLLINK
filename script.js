@@ -12,7 +12,7 @@ let currentLinks = [];
 let currentMode = 'GUEST'; 
 let currentUserID = ''; 
 
-// 【新增】彩蛋相關常數與變數
+// 【修改】彩蛋相關常數與變數
 let exitClickCount = 0; // 追蹤退出按鈕的連續點擊次數
 let clickTimer = null; // 用來在點擊間隔太長時重設計數
 const CLICK_THRESHOLD = 500; // 500 毫秒內算連續點擊
@@ -34,7 +34,6 @@ const ICON_OPTIONS = [
     { class: 'fas fa-cogs', name: 'Mixing/Extrusion (Cogs)' },
     { class: 'fas fa-compress-arrows-alt', name: 'Calendering (Press)' },
     { class: 'fas fa-cut', name: 'Cutting (Scissors)' },
-    // 【新增】圖示選項
     { class: 'fas fa-book', name: '筆記 (Book)' },
     { class: 'fas fa-feather-alt', name: '記事本 (Feather)' },
 ];
@@ -49,7 +48,6 @@ const DEFAULT_LINKS = [
     { id: 7, name: 'Extrusion\n押出工程', url: 'https://chiehs1429.github.io/Extrusion_app/', icon: 'fas fa-cogs' },
     { id: 8, name: 'Calendering\n上膠工程', url: 'https://chiehs1429.github.io/Calendering/', icon: 'fas fa-compress-arrows-alt' },
     { id: 9, name: 'CUTTING\n裁斷工程', url: 'https://chiehs1429.github.io/CUTTING-Inventory/', icon: 'fas fa-cut' },
-    // 【新增】彩蛋網址
     { id: DEREK_ID, name: 'DEREK Notes\n筆記彙整', url: 'https://dereklin1429.github.io/DEREK-Notes/', icon: 'fas fa-book' },
     { id: LAI_ID, name: '賴桑記事本\n記事本', url: 'https://dereklin1429.github.io/LAI/', icon: 'fas fa-feather-alt' },
 ];
@@ -100,7 +98,7 @@ function renderUserButtons() {
     const grid = document.getElementById('mainFeatures');
     grid.innerHTML = '';    
 
-    // 【修改點】過濾掉彩蛋連結 (ID 10 和 ID 11)，只渲染一般使用者連結
+    // 【修改】篩選掉彩蛋連結 (ID 10 和 ID 11)，只渲染一般使用者連結
     const userLinks = currentLinks.filter(link => 
         link.id !== DEREK_ID && link.id !== LAI_ID
     );
@@ -135,12 +133,12 @@ function renderUserButtons() {
         grid.appendChild(button);
     });
     
-    // 【新增】檢查彩蛋按鈕是否已存在，如果是，則在渲染完畢後重新添加回去
+    // 【修改】確保在 USER 模式下，如果彩蛋按鈕先前被點出來，會重新添加
     const container = document.getElementById('mainFeatures');
     const laiLink = currentLinks.find(l => l.id === LAI_ID);
     const derekLink = currentLinks.find(l => l.id === DEREK_ID);
     
-    // 如果彩蛋按鈕之前被點出來了，重新載入時要再放回去
+    // 如果彩蛋按鈕存在於 DOM 中，將其移回 grid
     if (laiLink && document.getElementById('laiLink')) {
         container.appendChild(createHiddenLinkButton(laiLink, 'laiLink'));
     }
@@ -180,9 +178,7 @@ function renderSettingsList() {
         const item = document.createElement('div');
         item.className = 'admin-item-btn'; 
 
-        // 點擊整個大按鈕，排除點擊動作按鈕時，彈出編輯介面
         item.addEventListener('click', (e) => {
-             // 確保只有點擊非 action 按鈕區域時才觸發 edit
              if (!e.target.closest('.admin-item-actions') && !e.target.closest('button')) {
                  editLink(link.id);
              }
@@ -203,7 +199,6 @@ function renderSettingsList() {
 // =======================================================
 // 函數：CRUD 操作 (使用 Modal)
 // =======================================================
-
 function showAddForm(id = null) {
     const modal = document.getElementById('editModal');
     const formTitle = document.getElementById('modalTitle');
@@ -211,7 +206,6 @@ function showAddForm(id = null) {
     const urlInput = document.getElementById('edit-url');
     let selectedIconClass = '';
     
-    // 顯示時設為 flex
     modal.style.display = 'flex'; 
 
     if (id !== null) {
@@ -234,7 +228,6 @@ function showAddForm(id = null) {
 }
 
 function hideAddForm() {
-    // 隱藏時設為 none
     document.getElementById('editModal').style.display = 'none'; 
 }
 
@@ -281,15 +274,13 @@ function deleteLink(id) {
 
 
 // =======================================================
-// 函數：模式切換 (統一控制顯示/隱藏) - 【修改點】使用統一函數
+// 函數：模式切換 (統一控制顯示/隱藏)
 // =======================================================
 
 function updateUI(mode) {
-    // 儲存當前模式
     currentMode = mode;
     setTitles(mode);
 
-    // 取得所有主要 UI 區塊
     const modeSelect = document.getElementById('modeSelectSection');
     const logout = document.getElementById('logoutSection');
     const mainFeatures = document.getElementById('mainFeatures');
@@ -302,8 +293,11 @@ function updateUI(mode) {
     mainFeatures.style.display = 'none';
     settingsPanel.style.display = 'none';
     hrDivider.style.display = 'none';
+    
+    // 【修改】GUEST 模式下，強制隱藏所有彩蛋按鈕
+    document.getElementById('laiLink')?.remove();
+    document.getElementById('derekLink')?.remove();
 
-    // 根據模式設定顯示狀態
     switch (mode) {
         case 'GUEST':
             modeSelect.style.display = 'grid';
@@ -312,7 +306,7 @@ function updateUI(mode) {
             logout.style.display = 'flex';
             mainFeatures.style.display = 'grid';
             hrDivider.style.display = 'block';
-            renderUserButtons(); // 確保進入 USER 模式時重新渲染按鈕
+            renderUserButtons(); 
             break;
         case 'ADMIN':
             settingsPanel.style.display = 'block';
@@ -325,11 +319,10 @@ function updateUI(mode) {
 function initPage() {
     loadLinks();
     renderUserButtons();
-    updateUI('GUEST'); // 使用新的統一函數
+    updateUI('GUEST'); 
 }
 
 function showAdminPrompt() {
-    // ... 安全性警告不變
     const password = prompt("請輸入管理員密碼 (Enter Admin Password)：\n(注意：此密碼在前端程式碼中寫死，僅供測試用途)");
 
     if (password === ADMIN_PASSWORD) {
@@ -340,13 +333,11 @@ function showAdminPrompt() {
 }
 
 function exitAdminView() {
-    // 從 Admin 退出時，回到 GUEST 模式 (首頁)
     handleLogout(false); 
     alert('已退出管理員設定畫面 (Exited Admin Setup View)。');
 }
 
 function handleLogout(clearID = false) { 
-    // 登出後回到 GUEST 首頁
     if (clearID) {
         localStorage.removeItem(USER_ID_KEY);
         currentUserID = '';
@@ -355,10 +346,6 @@ function handleLogout(clearID = false) {
     // 重設彩蛋計數
     exitClickCount = 0;
     if (clickTimer) clearTimeout(clickTimer);
-    
-    // 隱藏彩蛋按鈕 (以防它們顯示在 GUEST 模式)
-    document.getElementById('laiLink')?.remove();
-    document.getElementById('derekLink')?.remove();
 
     updateUI('GUEST'); 
 }
@@ -369,80 +356,20 @@ function enterSettingsMode() {
 
 function enterUserMode() { 
     updateUI('USER');
-    
-    // 由於 ID 登入已移除，這裡顯示預設的 '訪客'
     const actualUserID = '訪客';
     document.getElementById('welcomeMessage').textContent = `歡迎, ${actualUserID} (Welcome, ${actualUserID})`;
 }
 
 // =======================================================
-// 函數：彩蛋功能 (連續點擊邏輯) - 【新增】
+// 函數：彩蛋功能 (連續點擊邏輯) - 【修改為新的彩蛋邏輯】
 // =======================================================
-
-/**
- * 處理連續點擊事件並觸發隱藏按鈕的顯示/隱藏
- */
-function handleExitClick() {
-    // 雖然按鈕不再是退出功能，但為了不讓使用者困惑，依然彈出提示
-    alert('此按鈕目前無作用，請選擇「進入系統」或「管理設定」。');
-    
-    clearTimeout(clickTimer); // 清除舊的計時器
-    exitClickCount++; // 增加計數
-
-    // 重設計時器：如果 500ms 內沒有下次點擊，則重設計數
-    clickTimer = setTimeout(() => {
-        exitClickCount = 0;
-        console.log('點擊間隔過長，計數已重設。');
-    }, CLICK_THRESHOLD);
-    
-    // 檢查 "賴桑記事本" (ID 11, 點擊 5 次)
-    handleHiddenLink(LAI_ID, 5, 'laiLink');
-
-    // 檢查 "DEREK Notes" (ID 10, 點擊 10 次)
-    handleHiddenLink(DEREK_ID, 10, 'derekLink');
-
-    // 如果點擊次數超過最大閾值，重設計數（避免無窮遞增）
-    if (exitClickCount > 10) {
-        exitClickCount = 0;
-    }
-}
-
-/**
- * 通用處理隱藏連結的顯示和隱藏
- * @param {number} linkId - 連結的 ID (DEREK_ID 或 LAI_ID)
- * @param {number} threshold - 觸發顯示/隱藏的點擊次數
- * @param {string} elementId - 按鈕元素的 ID
- */
-function handleHiddenLink(linkId, threshold, elementId) {
-    const link = currentLinks.find(l => l.id === linkId);
-    if (!link) return;
-
-    const container = document.getElementById('mainFeatures');
-    let button = document.getElementById(elementId);
-    
-    // 點擊次數達到閾值
-    if (exitClickCount === threshold) {
-        if (!button) {
-            // 達到閾值且按鈕不存在：顯示按鈕 (彩蛋開啟)
-            button = createHiddenLinkButton(link, elementId);
-            container.appendChild(button);
-            // 確保按鈕區塊在彩蛋觸發時顯示
-            document.getElementById('mainFeatures').style.display = 'grid';
-            alert(`恭喜您觸發了隱藏彩蛋！${link.name} 現已顯示！`);
-        } else {
-            // 達到閾值且按鈕已存在：隱藏按鈕 (彩蛋關閉)
-            button.remove();
-            alert(`${link.name} 按鈕已隱藏。`);
-        }
-        exitClickCount = 0; // 觸發後重設計數
-    }
-}
 
 /**
  * 建立隱藏連結的按鈕元素 (與 renderUserButtons 共享邏輯)
  */
 function createHiddenLinkButton(link, elementId) {
     const button = document.createElement('button');
+    // 雖然彩蛋出現在 GUEST 模式，但依然使用 .icon-btn 樣式
     button.className = 'icon-btn';
     button.id = elementId;
     button.title = `${link.name}\n${link.url}`; 
@@ -458,11 +385,82 @@ function createHiddenLinkButton(link, elementId) {
          if (link.url) {
             window.open(link.url, '_blank');
         } else {
-            alert('此按鈕尚未設定網址！請聯絡管理員。');
+            // 由於連結硬編碼在 DEFAULT_LINKS 中，理論上不會發生
+            console.error('彩蛋連結 URL 遺失');
         }
     });
     return button;
 }
+
+/**
+ * 通用處理隱藏連結的顯示和隱藏
+ * @param {number} linkId - 連結的 ID
+ * @param {string} elementId - 按鈕元素的 ID
+ * @param {number} showCount - 顯示按鈕的點擊次數
+ * @param {number} hideCount - 隱藏按鈕的點擊次數
+ */
+function toggleHiddenLink(linkId, elementId, showCount, hideCount) {
+    const link = currentLinks.find(l => l.id === linkId);
+    if (!link || currentMode !== 'GUEST') return; // 只在 GUEST 模式下工作
+
+    const container = document.getElementById('mainFeatures');
+    let button = document.getElementById(elementId);
+    
+    if (exitClickCount === showCount && !button) {
+        // 達到顯示次數，且按鈕不存在：顯示按鈕
+        button = createHiddenLinkButton(link, elementId);
+        container.appendChild(button);
+        // 強制確保按鈕容器顯示，但其他部分保持隱藏
+        container.style.display = 'grid'; 
+        // 點擊後，重設計數，從零開始計算下一個動作
+        exitClickCount = 0; 
+    } else if (exitClickCount === hideCount && button) {
+        // 達到隱藏次數，且按鈕存在：隱藏按鈕
+        button.remove();
+        // 如果兩個按鈕都隱藏，且主按鈕 grid 是空的，就隱藏 grid
+        if (!document.getElementById('laiLink') && !document.getElementById('derekLink')) {
+            container.style.display = 'none';
+        }
+        // 點擊後，重設計數
+        exitClickCount = 0; 
+    }
+}
+
+
+/**
+ * 處理連續點擊事件 (【關鍵修改】: 移除 alert)
+ */
+function handleExitClick() {
+    // 確保只在 GUEST 模式下啟動彩蛋邏輯
+    if (currentMode !== 'GUEST') return;
+    
+    // 【修改點】移除 alert 訊息
+    
+    clearTimeout(clickTimer); 
+    exitClickCount++; 
+
+    // 重設計時器：如果 500ms 內沒有下次點擊，則重設計數
+    clickTimer = setTimeout(() => {
+        exitClickCount = 0;
+        console.log('點擊間隔過長，計數已重設。');
+    }, CLICK_THRESHOLD);
+    
+    // ------------------------------------------
+    // 賴桑記事本 (ID 11) - 5次顯示 / 10次隱藏
+    // ------------------------------------------
+    toggleHiddenLink(LAI_ID, 'laiLink', 5, 10);
+
+    // ------------------------------------------
+    // DEREK Notes (ID 10) - 10次顯示 / 20次隱藏
+    // ------------------------------------------
+    toggleHiddenLink(DEREK_ID, 'derekLink', 10, 20);
+
+    // 如果計數超過最大所需點擊次數 (20)，重設以防無窮遞增
+    if (exitClickCount > 20) {
+        exitClickCount = 0;
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('editUrlForm').addEventListener('submit', handleFormSubmit);
@@ -470,13 +468,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.onclick = function(event) {
         const modal = document.getElementById('editModal');
-        // 確保 Modal 隱藏時，點擊外部區域也能將其關閉
         if (modal.style.display === 'flex' && event.target === modal) {
             modal.style.display = "none";
         }
     }
     
-    // 【新增】為退出按鈕添加事件監聽器
+    // 為退出按鈕添加事件監聽器
     const exitBtn = document.getElementById('exitButton');
     if (exitBtn) {
         exitBtn.addEventListener('click', handleExitClick);
