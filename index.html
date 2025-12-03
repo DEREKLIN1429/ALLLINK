@@ -16,7 +16,7 @@
 
       <div class="mode-buttons-grid" id="modeSelectSection">
             
-            <button class="mode-btn mode-btn-login" onclick="enterUserMode('訪客')">
+            <button class="mode-btn mode-btn-login" onclick="enterUserMode()">
                 <i class="fas fa-desktop fa-4x"></i>
                 <span>進入系統 | Enter System</span>
             </button>
@@ -35,26 +35,29 @@
         <div id="logoutSection" style="display: none;">
             <div class="logout-control-bar">
                 <span id="welcomeMessage" class="welcome-text"></span>
-                <button id="logoutBtn" onclick="handleLogout()">登出 | Logout</button>
+                <button id="logoutBtn" onclick="handleLogout(true)">登出 | Logout</button>
             </div>
         </div>
 
         <hr id="hrDivider" style="display: none;">
         
         <div class="button-grid" id="mainFeatures" style="display: none;">
-            </div>
+        </div>
 
         <div class="settings-section" id="settingsPanel" style="display: none;">
-            <h2>⚙️ 網址連結設定 (管理員模式) | URL Link Settings (Admin Mode)</h2>
+            <div class="settings-header-controls">
+                <h2>⚙️ 網址連結設定 (管理員模式) | URL Link Settings (Admin Mode)</h2>
+                
+                <div class="admin-controls">
+                    <button id="addNewBtn" onclick="showAddForm()">新增網址 | Add New</button>
+                    <button id="exitSettingsBtn" onclick="exitAdminView()">退出設定模式 | Exit Admin Mode</button>
+                </div>
+            </div>
             
             <div id="urlListContainer" class="admin-button-grid">
             </div>
             
-            <div class="admin-controls">
-                <button id="addNewBtn" onclick="showAddForm()">新增網址 | Add New</button>
-                <button id="exitSettingsBtn" onclick="exitAdminView()">退出設定模式 | Exit Admin Mode</button>
             </div>
-        </div>
         
     </div>
 
@@ -88,7 +91,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
