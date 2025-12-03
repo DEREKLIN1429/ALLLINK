@@ -1,8 +1,9 @@
 // =======================================================
 // 全域變數/常數
 // =======================================================
-const TITLE_LOGIN = '生產智能系統彙整 登入 | Production Intelligence System Login';
-const TITLE_USER_MODE = '生產智能系統彙整 | Production Intelligence System Integration';
+// 【修正點 1】更新標語常數
+const TITLE_LOGIN = '生產作業系統彙整 登入 | PIS Login';
+const TITLE_USER_MODE = '生產作業系統彙整 | PIS Integration';
 const TITLE_ADMIN_MODE = '🛠️ 網址連結設定 (管理員模式)';
 const ADMIN_PASSWORD = '12345'; // ⚠️ 注意：在前端硬編碼密碼非常不安全，僅供測試用途。
 
@@ -13,8 +14,10 @@ let currentMode = 'GUEST';
 let currentUserID = ''; 
 
 // 【修改】彩蛋相關常數與變數
-let exitClickCount = 0; // 追蹤退出按鈕的連續點擊次數
-let clickTimer = null; // 用來在點擊間隔太長時重設計數
+let exitClickCount = 0; // 追蹤退出按鈕的連續點擊次數 (控制賴桑)
+let headerClickCount = 0; // 追蹤標題的連續點擊次數 (控制 DEREK Notes)
+let clickTimerExit = null; // 退出按鈕計時器
+let clickTimerHeader = null; // 標題計時器
 const CLICK_THRESHOLD = 500; // 500 毫秒內算連續點擊
 
 const DEREK_ID = 10;
@@ -98,7 +101,7 @@ function renderUserButtons() {
     const grid = document.getElementById('mainFeatures');
     grid.innerHTML = '';    
 
-    // 【修改】篩選掉彩蛋連結 (ID 10 和 ID 11)，只渲染一般使用者連結
+    // 篩選掉彩蛋連結 (ID 10 和 ID 11)，只渲染一般使用者連結
     const userLinks = currentLinks.filter(link => 
         link.id !== DEREK_ID && link.id !== LAI_ID
     );
@@ -121,7 +124,6 @@ function renderUserButtons() {
             <span>${link.name}</span>
         `;
         
-        // 使用者模式點擊後直接連結
         button.addEventListener('click', () => {
              if (link.url) {
                  window.open(link.url, '_blank');
@@ -133,12 +135,11 @@ function renderUserButtons() {
         grid.appendChild(button);
     });
     
-    // 【修改】確保在 USER 模式下，如果彩蛋按鈕先前被點出來，會重新添加
+    // 確保在 USER 模式下，如果彩蛋按鈕先前被點出來，會重新添加
     const container = document.getElementById('mainFeatures');
     const laiLink = currentLinks.find(l => l.id === LAI_ID);
     const derekLink = currentLinks.find(l => l.id === DEREK_ID);
     
-    // 如果彩蛋按鈕存在於 DOM 中，將其移回 grid
     if (laiLink && document.getElementById('laiLink')) {
         container.appendChild(createHiddenLinkButton(laiLink, 'laiLink'));
     }
@@ -287,16 +288,19 @@ function updateUI(mode) {
     const settingsPanel = document.getElementById('settingsPanel');
     const hrDivider = document.getElementById('hrDivider');
     
-    // 重設所有區塊顯示狀態為隱藏
     modeSelect.style.display = 'none';
     logout.style.display = 'none';
     mainFeatures.style.display = 'none';
     settingsPanel.style.display = 'none';
     hrDivider.style.display = 'none';
     
-    // 【修改】GUEST 模式下，強制隱藏所有彩蛋按鈕
+    // 強制隱藏所有彩蛋按鈕並重設計數
     document.getElementById('laiLink')?.remove();
     document.getElementById('derekLink')?.remove();
+    exitClickCount = 0;
+    headerClickCount = 0;
+    if (clickTimerExit) clearTimeout(clickTimerExit);
+    if (clickTimerHeader) clearTimeout(clickTimerHeader);
 
     switch (mode) {
         case 'GUEST':
@@ -343,9 +347,11 @@ function handleLogout(clearID = false) {
         currentUserID = '';
     }
 
-    // 重設彩蛋計數
+    // 重設彩蛋計數並清除計時器
     exitClickCount = 0;
-    if (clickTimer) clearTimeout(clickTimer);
+    headerClickCount = 0;
+    if (clickTimerExit) clearTimeout(clickTimerExit);
+    if (clickTimerHeader) clearTimeout(clickTimerHeader);
 
     updateUI('GUEST'); 
 }
@@ -361,15 +367,11 @@ function enterUserMode() {
 }
 
 // =======================================================
-// 函數：彩蛋功能 (連續點擊邏輯) - 【修改為新的彩蛋邏輯】
+// 函數：彩蛋功能 (連續點擊邏輯) - 【修正為雙彩蛋邏輯】
 // =======================================================
 
-/**
- * 建立隱藏連結的按鈕元素 (與 renderUserButtons 共享邏輯)
- */
 function createHiddenLinkButton(link, elementId) {
     const button = document.createElement('button');
-    // 雖然彩蛋出現在 GUEST 模式，但依然使用 .icon-btn 樣式
     button.className = 'icon-btn';
     button.id = elementId;
     button.title = `${link.name}\n${link.url}`; 
@@ -385,7 +387,6 @@ function createHiddenLinkButton(link, elementId) {
          if (link.url) {
             window.open(link.url, '_blank');
         } else {
-            // 由於連結硬編碼在 DEFAULT_LINKS 中，理論上不會發生
             console.error('彩蛋連結 URL 遺失');
         }
     });
@@ -396,67 +397,82 @@ function createHiddenLinkButton(link, elementId) {
  * 通用處理隱藏連結的顯示和隱藏
  * @param {number} linkId - 連結的 ID
  * @param {string} elementId - 按鈕元素的 ID
+ * @param {number} currentCount - 當前的點擊計數變數
  * @param {number} showCount - 顯示按鈕的點擊次數
  * @param {number} hideCount - 隱藏按鈕的點擊次數
+ * @returns {number} 返回重設後的計數
  */
-function toggleHiddenLink(linkId, elementId, showCount, hideCount) {
+function toggleHiddenLink(linkId, elementId, currentCount, showCount, hideCount) {
     const link = currentLinks.find(l => l.id === linkId);
-    if (!link || currentMode !== 'GUEST') return; // 只在 GUEST 模式下工作
+    if (!link || currentMode !== 'GUEST') return currentCount; 
 
     const container = document.getElementById('mainFeatures');
     let button = document.getElementById(elementId);
     
-    if (exitClickCount === showCount && !button) {
+    if (currentCount === showCount && !button) {
         // 達到顯示次數，且按鈕不存在：顯示按鈕
         button = createHiddenLinkButton(link, elementId);
         container.appendChild(button);
-        // 強制確保按鈕容器顯示，但其他部分保持隱藏
         container.style.display = 'grid'; 
-        // 點擊後，重設計數，從零開始計算下一個動作
-        exitClickCount = 0; 
-    } else if (exitClickCount === hideCount && button) {
+        return 0; // 重設計數
+    } else if (currentCount === hideCount && button) {
         // 達到隱藏次數，且按鈕存在：隱藏按鈕
         button.remove();
-        // 如果兩個按鈕都隱藏，且主按鈕 grid 是空的，就隱藏 grid
+        // 如果兩個按鈕都隱藏，就隱藏 grid
         if (!document.getElementById('laiLink') && !document.getElementById('derekLink')) {
             container.style.display = 'none';
         }
-        // 點擊後，重設計數
-        exitClickCount = 0; 
+        return 0; // 重設計數
     }
+    
+    return currentCount; // 保持當前計數
 }
 
 
 /**
- * 處理連續點擊事件 (【關鍵修改】: 移除 alert)
+ * 處理標題點擊事件 (控制 DEREK Notes)
  */
-function handleExitClick() {
-    // 確保只在 GUEST 模式下啟動彩蛋邏輯
+function handleHeaderClick() {
     if (currentMode !== 'GUEST') return;
     
-    // 【修改點】移除 alert 訊息
-    
-    clearTimeout(clickTimer); 
-    exitClickCount++; 
+    clearTimeout(clickTimerHeader); 
+    headerClickCount++; 
 
-    // 重設計時器：如果 500ms 內沒有下次點擊，則重設計數
-    clickTimer = setTimeout(() => {
-        exitClickCount = 0;
-        console.log('點擊間隔過長，計數已重設。');
+    // 重設計時器
+    clickTimerHeader = setTimeout(() => {
+        headerClickCount = 0;
+        console.log('標題點擊間隔過長，計數已重設。');
     }, CLICK_THRESHOLD);
     
-    // ------------------------------------------
-    // 賴桑記事本 (ID 11) - 5次顯示 / 10次隱藏
-    // ------------------------------------------
-    toggleHiddenLink(LAI_ID, 'laiLink', 5, 10);
-
-    // ------------------------------------------
-    // DEREK Notes (ID 10) - 10次顯示 / 20次隱藏
-    // ------------------------------------------
-    toggleHiddenLink(DEREK_ID, 'derekLink', 10, 20);
+    // 【修正點 2】DEREK Notes (ID 10) - 10次顯示 / 20次隱藏
+    headerClickCount = toggleHiddenLink(DEREK_ID, 'derekLink', headerClickCount, 10, 20);
 
     // 如果計數超過最大所需點擊次數 (20)，重設以防無窮遞增
-    if (exitClickCount > 20) {
+    if (headerClickCount > 20) {
+        headerClickCount = 0;
+    }
+}
+
+/**
+ * 處理「退出 EXIT」按鈕點擊事件 (控制賴桑記事本)
+ */
+function handleExitClick() {
+    if (currentMode !== 'GUEST') return;
+    
+    clearTimeout(clickTimerExit); 
+    exitClickCount++; 
+
+    // 重設計時器
+    clickTimerExit = setTimeout(() => {
+        exitClickCount = 0;
+        console.log('退出按鈕點擊間隔過長，計數已重設。');
+    }, CLICK_THRESHOLD);
+    
+    // 【修正點 3】賴桑記事本 (ID 11) - 5次顯示 / 10次隱藏
+    exitClickCount = toggleHiddenLink(LAI_ID, 'laiLink', exitClickCount, 5, 10);
+
+    // 如果計數超過最大所需點擊次數 (10)，重設以防無窮遞增
+    if (exitClickCount > 10) {
         exitClickCount = 0;
     }
 }
@@ -477,5 +493,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const exitBtn = document.getElementById('exitButton');
     if (exitBtn) {
         exitBtn.addEventListener('click', handleExitClick);
+    }
+    
+    // 【新增】為標題添加事件監聽器
+    const headerBtn = document.getElementById('mainHeader');
+    if (headerBtn) {
+        headerBtn.addEventListener('click', handleHeaderClick);
     }
 });
