@@ -131,7 +131,7 @@ body {
 }
 
 .icon-btn, .admin-item-btn {
-    /* 【關鍵修正】：改為方塊圖形顯示 (1:1 比例) */
+    /* 【已確認】: 方塊圖形 (1:1 比例) */
     aspect-ratio: 1 / 1; 
     padding: 15px; 
     font-size: 1.2em; 
@@ -278,7 +278,7 @@ body {
     height: 100%; 
     overflow: auto; 
     background-color: rgba(0,0,0,0.8);
-    /* 關鍵修正: Flexbox 居中 */
+    /* 關鍵修正: 預設為隱藏，修復開啟主頁出現Modal的問題 */
     display: none; 
     justify-content: center;
     align-items: center;
