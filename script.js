@@ -12,7 +12,7 @@ let currentLinks = [];
 let currentMode = 'GUEST'; 
 let currentUserID = ''; 
 
-// 【修正點】彩蛋相關常數與變數
+// 彩蛋相關常數與變數
 let exitClickCount = 0; // 追蹤退出按鈕的連續點擊次數 (控制賴桑)
 let headerClickCount = 0; // 追蹤標題的連續點擊次數 (控制 DEREK Notes)
 let clickTimerExit = null; // 退出按鈕計時器
@@ -100,60 +100,63 @@ function renderUserButtons() {
     const grid = document.getElementById('mainFeatures');
     grid.innerHTML = '';    
 
-    // 【修正點】過濾掉彩蛋連結，確保它們不會被當作正常連結渲染
-    const userLinks = currentLinks.filter(link => 
-        link.id !== DEREK_ID && link.id !== LAI_ID
-    );
+    // 【關鍵修正點】只有在 USER 模式下才渲染正常連結
+    if (currentMode === 'USER') {
+        const userLinks = currentLinks.filter(link => 
+            link.id !== DEREK_ID && link.id !== LAI_ID
+        );
 
-    if (userLinks.length === 0) {
-        // 如果沒有其他連結，並且彩蛋也沒顯示，這裡就不會執行後續添加彩蛋按鈕的邏輯
-        // 這是正確的，因為 GUEST 模式下，如果沒有彩蛋，mainFeatures.style.display 會是 'none'。
-        // 在 USER 模式下，如果沒有連結，這裡會顯示提示。
-        if (currentMode === 'USER') {
-             grid.innerHTML = '<p style="color:var(--primary-color);">目前沒有設定任何按鈕！請聯絡管理員新增。</p>';
+        if (userLinks.length === 0) {
+            grid.innerHTML = '<p style="color:var(--primary-color);">目前沒有設定任何按鈕！請聯絡管理員新增。</p>';
+            return;
         }
-        return;
-    }
-        
-    userLinks.forEach(link => {
-        const button = document.createElement('button');
-        button.className = 'icon-btn';
-        button.id = `btn-${link.id}`;
-        button.title = `${link.name}\n${link.url}`; 
-        
-        const iconClass = link.icon && link.icon.trim() !== '' ? link.icon : 'fas fa-link';
+            
+        userLinks.forEach(link => {
+            const button = document.createElement('button');
+            button.className = 'icon-btn';
+            button.id = `btn-${link.id}`;
+            button.title = `${link.name}\n${link.url}`; 
+            
+            const iconClass = link.icon && link.icon.trim() !== '' ? link.icon : 'fas fa-link';
 
-        button.innerHTML = `
-            <i class="${iconClass} fa-3x btn-icon-fa"></i>
-            <span>${link.name}</span>
-        `;
-        
-        button.addEventListener('click', () => {
-             if (link.url) {
-                 window.open(link.url, '_blank');
-             } else {
-                 alert('此按鈕尚未設定網址！請聯絡管理員。');
-             }
+            button.innerHTML = `
+                <i class="${iconClass} fa-3x btn-icon-fa"></i>
+                <span>${link.name}</span>
+            `;
+            
+            button.addEventListener('click', () => {
+                 if (link.url) {
+                     window.open(link.url, '_blank');
+                 } else {
+                     alert('此按鈕尚未設定網址！請聯絡管理員。');
+                 }
+            });
+
+            grid.appendChild(button);
         });
-
-        grid.appendChild(button);
-    });
-    
-    // 確保在 USER 模式下，如果彩蛋按鈕先前被點出來，會重新添加
-    const container = document.getElementById('mainFeatures');
-    const laiLink = currentLinks.find(l => l.id === LAI_ID);
-    const derekLink = currentLinks.find(l => l.id === DEREK_ID);
-    
-    // 如果 DOM 中已經有彩蛋按鈕的佔位符，則重建按鈕並加入
-    // 由於彩蛋只在 GUEST 模式下才會動態創建，這裡的邏輯主要確保在切換到 USER 模式時，彩蛋不會被覆蓋。
-    if (laiLink && document.getElementById('laiLink')) {
-        // 先移除舊的佔位符 (如果有的話)
-        document.getElementById('laiLink').remove(); 
-        container.appendChild(createHiddenLinkButton(laiLink, 'laiLink'));
     }
-    if (derekLink && document.getElementById('derekLink')) {
-        document.getElementById('derekLink').remove();
-        container.appendChild(createHiddenLinkButton(derekLink, 'derekLink'));
+    
+    // 確保在 GUEST 模式下，如果彩蛋按鈕存在，會被重新加回 DOM
+    if (currentMode === 'GUEST') {
+        const laiLink = currentLinks.find(l => l.id === LAI_ID);
+        const derekLink = currentLinks.find(l => l.id === DEREK_ID);
+        
+        // 檢查 DOM 中是否有彩蛋按鈕的佔位符，如果從其他模式切換回來，則重新渲染彩蛋按鈕。
+        if (laiLink && document.getElementById('laiLink')) {
+            document.getElementById('laiLink').remove(); 
+            grid.appendChild(createHiddenLinkButton(laiLink, 'laiLink'));
+        }
+        if (derekLink && document.getElementById('derekLink')) {
+            document.getElementById('derekLink').remove();
+            grid.appendChild(createHiddenLinkButton(derekLink, 'derekLink'));
+        }
+        
+        // 如果至少一個彩蛋顯示，保持 grid 顯示
+        if (document.getElementById('laiLink') || document.getElementById('derekLink')) {
+            grid.style.display = 'grid';
+        } else {
+            grid.style.display = 'none';
+        }
     }
 }
 
@@ -209,8 +212,6 @@ function renderSettingsList() {
 // =======================================================
 // 函數：CRUD 操作 (使用 Modal)
 // =======================================================
-// ... (CRUD 函數不變) ...
-
 function showAddForm(id = null) {
     const modal = document.getElementById('editModal');
     const formTitle = document.getElementById('modalTitle');
@@ -305,10 +306,10 @@ function updateUI(mode) {
     settingsPanel.style.display = 'none';
     hrDivider.style.display = 'none';
     
-    // 強制隱藏所有彩蛋按鈕並重設計數
-    document.getElementById('laiLink')?.remove();
-    document.getElementById('derekLink')?.remove();
+    // 【關鍵修正】強制清空 mainFeatures，以防正常連結和彩蛋混雜
+    mainFeatures.innerHTML = '';
     
+    // 重設彩蛋狀態
     exitClickCount = 0;
     headerClickCount = 0;
     if (clickTimerExit) clearTimeout(clickTimerExit);
@@ -317,12 +318,14 @@ function updateUI(mode) {
     switch (mode) {
         case 'GUEST':
             modeSelect.style.display = 'grid';
+            // GUEST 模式下，mainFeatures 應為 'none'，除非彩蛋被點擊出來。
+            // renderUserButtons() 不再在 GUEST 模式下呼叫
             break;
         case 'USER':
             logout.style.display = 'flex';
             mainFeatures.style.display = 'grid';
             hrDivider.style.display = 'block';
-            renderUserButtons(); 
+            renderUserButtons(); // 在 USER 模式下，渲染正常連結
             break;
         case 'ADMIN':
             settingsPanel.style.display = 'block';
@@ -334,7 +337,7 @@ function updateUI(mode) {
 
 function initPage() {
     loadLinks();
-    renderUserButtons();
+    // 初始狀態是 GUEST，不需要呼叫 renderUserButtons
     updateUI('GUEST'); 
 }
 
@@ -358,13 +361,6 @@ function handleLogout(clearID = false) {
         localStorage.removeItem(USER_ID_KEY);
         currentUserID = '';
     }
-
-    // 重設彩蛋計數並清除計時器
-    exitClickCount = 0;
-    headerClickCount = 0;
-    if (clickTimerExit) clearTimeout(clickTimerExit);
-    if (clickTimerHeader) clearTimeout(clickTimerHeader);
-
     updateUI('GUEST'); 
 }
 
@@ -408,38 +404,38 @@ function createHiddenLinkButton(link, elementId) {
 /**
  * 通用處理隱藏連結的顯示和隱藏
  * @param {number} linkId - 連結的 ID
- * @param {string} elementId - 按鈕元素的 ID
+ * @param {string} elementId - 按鈕元素的 ID (例: 'laiLink')
  * @param {number} currentCount - 當前的點擊計數變數
  * @param {number} showCount - 顯示按鈕的點擊次數
  * @param {number} hideCount - 隱藏按鈕的點擊次數
+ * @param {string} otherElementId - 另一個彩蛋按鈕的 ID (用於檢查是否要隱藏容器)
  * @returns {number} 返回重設後的計數
  */
-function toggleHiddenLink(linkId, elementId, currentCount, showCount, hideCount) {
+function toggleHiddenLink(linkId, elementId, currentCount, showCount, hideCount, otherElementId) {
     const link = currentLinks.find(l => l.id === linkId);
     if (!link || currentMode !== 'GUEST') return currentCount; 
 
     const container = document.getElementById('mainFeatures');
     let button = document.getElementById(elementId);
     
-    // 檢查是否有其他彩蛋按鈕顯示中 (確保容器顯示)
-    const isLaiShowing = !!document.getElementById('laiLink');
-    const isDerekShowing = !!document.getElementById('derekLink');
-
     if (currentCount === showCount && !button) {
         // 達到顯示次數，且按鈕不存在：顯示按鈕
         button = createHiddenLinkButton(link, elementId);
         container.appendChild(button);
-        // 【修正點】只有在 GUEST 模式下，且至少有一個彩蛋顯示時，才顯示 mainFeatures
+        
+        // 【關鍵修正】確保清空其他內容，只保留彩蛋
+        // 由於 updateUI/handleLogout 時已經清空，這裡只需確保 grid 顯示
         container.style.display = 'grid'; 
         return 0; // 重設計數
     } else if (currentCount === hideCount && button) {
         // 達到隱藏次數，且按鈕存在：隱藏按鈕
         button.remove();
         
-        // 檢查是否所有彩蛋都隱藏了
-        const areAllHidden = (elementId === 'laiLink' ? !isDerekShowing : !isLaiShowing);
+        // 檢查另一個彩蛋按鈕是否仍在顯示中
+        const isOtherShowing = !!document.getElementById(otherElementId);
 
-        if (areAllHidden) {
+        if (!isOtherShowing) {
+            // 如果另一個彩蛋也隱藏了，則隱藏整個容器
             container.style.display = 'none';
         }
         return 0; // 重設計數
@@ -464,8 +460,8 @@ function handleHeaderClick() {
         console.log('標題點擊間隔過長，計數已重設。');
     }, CLICK_THRESHOLD);
     
-    // 【修正】確保只影響 DEREK Notes
-    headerClickCount = toggleHiddenLink(DEREK_ID, 'derekLink', headerClickCount, 10, 20);
+    // 專門控制 DEREK Notes (ID 10)，並檢查 LAI 是否顯示
+    headerClickCount = toggleHiddenLink(DEREK_ID, 'derekLink', headerClickCount, 10, 20, 'laiLink');
 
     // 如果計數超過最大所需點擊次數 (20)，重設以防無窮遞增
     if (headerClickCount > 20) {
@@ -488,8 +484,8 @@ function handleExitClick() {
         console.log('退出按鈕點擊間隔過長，計數已重設。');
     }, CLICK_THRESHOLD);
     
-    // 【修正】確保只影響 賴桑記事本
-    exitClickCount = toggleHiddenLink(LAI_ID, 'laiLink', exitClickCount, 5, 10);
+    // 專門控制 賴桑記事本 (ID 11)，並檢查 DEREK 是否顯示
+    exitClickCount = toggleHiddenLink(LAI_ID, 'laiLink', exitClickCount, 5, 10, 'derekLink');
 
     // 如果計數超過最大所需點擊次數 (10)，重設以防無窮遞增
     if (exitClickCount > 10) {
