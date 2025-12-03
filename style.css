@@ -90,7 +90,7 @@ body {
 
 /* -------------------- GUEST 模式大按鈕 -------------------- */
 .mode-buttons-grid {
-    /* 登入區維持 3 欄佈局 */
+    /* 登入區維持 3 欄佈局 (在一般電腦/橫向平板下) */
     display: grid;
     grid-template-columns: repeat(3, 1fr); 
     gap: 30px;
@@ -131,8 +131,8 @@ body {
 }
 
 .icon-btn, .admin-item-btn {
-    /* 保持修正後的寬扁比例 */
-    aspect-ratio: 2 / 1; 
+    /* 【關鍵修正】：改為方塊圖形顯示 (1:1 比例) */
+    aspect-ratio: 1 / 1; 
     padding: 15px; 
     font-size: 1.2em; 
     transform: translateY(-2px);
@@ -338,41 +338,28 @@ body {
 }
 
 /* ============================================= */
-/* 修正: 響應式設計 (手機畫面優化) */
+/* 修正: 響應式設計 (手機豎立方向 - Portrait Mode Only) */
+/* 適用於手機/小型平板，且設備為豎立狀態時 */
 /* ============================================= */
-
-@media (max-width: 768px) {
-    .container {
-        padding: 15px;
-        margin: 5px;
-        max-width: 100%;
-        box-sizing: border-box; 
-    }
-
-    /* 修正: 標題字體縮小 */
-    .header-container h1 {
-        font-size: 1.2em; 
-    }
-
-    .header-container {
-        flex-direction: column; 
-        align-items: flex-start;
-        padding-bottom: 5px;
-        margin-bottom: 15px;
-    }
-
-    /* 所有功能區塊在手機上改為 1 欄佈局 */
-    .mode-buttons-grid, 
+@media (max-width: 1000px) and (orientation: portrait) {
+    
+    /* 連結按鈕 (User Mode) 與 Admin 列表改為 1 欄佈局 */
     .button-grid, 
     .admin-button-grid {
         grid-template-columns: 1fr; /* 修正為 1 欄 */
         gap: 15px; 
         padding: 15px 0;
     }
-    
-    /* 確保所有大按鈕維持高度縮減和字體加大 */
+    
+    /* 登入模式的大按鈕 (Enter/Admin/Exit) */
+    .mode-buttons-grid {
+        grid-template-columns: 1fr; /* 在手機豎立時也改為 1 欄縱向排列 */
+        gap: 15px;
+    }
+
+    /* 確保所有大按鈕維持方塊比例和適當字體大小 */
     .mode-btn, .icon-btn, .admin-item-btn {
-        aspect-ratio: 2 / 1; 
+        aspect-ratio: 1 / 1; 
         min-height: 80px; 
         font-size: 1.5em; 
         padding: 10px;
@@ -381,29 +368,25 @@ body {
         font-size: 2em !important; 
     }
 
-    /* Admin Setting Header 手機優化 - 確保按鈕置頂並縱向分佈 */
-    .settings-header-controls {
-        flex-direction: row; 
-        justify-content: flex-end; 
-        align-items: center; 
-        gap: 0; 
-        padding-top: 10px;
-        margin-bottom: 15px;
-    }
-    
-    .admin-controls {
-        /* 確保手機上也保持縱向排列，並右對齊 */
-        width: auto; 
-        flex-direction: column; 
-        align-items: flex-end; 
-    }
-    
-    .admin-controls button {
-        /* 移除寬度限制 */
-        width: auto; 
-        font-size: 0.9em;
+    /* 調整容器和文字大小以適應手機畫面 */
+    .container {
+        padding: 15px;
+        margin: 5px;
+        max-width: 100%;
+        box-sizing: border-box; 
     }
 
+    /* 標題字體縮小 */
+    .header-container h1 {
+        font-size: 1.2em; 
+    }
+    .header-container {
+        flex-direction: column; 
+        align-items: flex-start;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+    }
+    
     /* Modal 調整 */
     .modal-content {
         width: 98%; 
@@ -418,5 +401,23 @@ body {
     }
     .modal-actions button {
         width: 100%;
+    }
+}
+/* ============================================= */
+/* 保留原有的 max-width: 768px 樣式用於其他樣式調整 (非佈局) */
+/* ============================================= */
+@media (max-width: 768px) {
+    /* 這裡可以放一些與佈局無關的純 UI 調整，例如： */
+    .admin-controls {
+        /* 確保手機上也保持縱向排列，並右對齊 */
+        width: auto; 
+        flex-direction: column; 
+        align-items: flex-end; 
+    }
+    
+    .admin-controls button {
+        /* 移除寬度限制 */
+        width: auto; 
+        font-size: 0.9em;
     }
 }
