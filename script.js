@@ -3,9 +3,9 @@
 // =======================================================
 const TITLE_LOGIN = '生產智能系統彙整 登入 | Production Intelligence System Login';
 const TITLE_USER_MODE = '生產智能系統彙整 | Production Intelligence System Integration';
-const TITLE_ADMIN_MODE = '🛠️ 工作站功能選單 | Workstation Features Menu';
+const TITLE_ADMIN_MODE = '🛠️ 網址連結設定 (管理員模式)'; // 簡化標題
+const ADMIN_PASSWORD = '12345'; // ⚠️ 注意：在前端硬編碼密碼非常不安全，僅供測試用途。
 
-const ADMIN_PASSWORD = '12345'; 
 const STORAGE_KEY = 'factory_links_data';
 const USER_ID_KEY = 'current_user_id'; 
 let currentLinks = []; 
@@ -27,7 +27,6 @@ const ICON_OPTIONS = [
     { class: 'fas fa-cut', name: 'Cutting (Scissors)' },
 ];
 
-// 修正：DEFAULT_LINKS 使用最新的標題和網址
 const DEFAULT_LINKS = [
     { id: 1, name: 'Machine-NG\n機械故障', url: 'https://dereklin1429.github.io/Machine-NG/', icon: 'fas fa-exclamation-triangle' },
     { id: 2, name: '5S Audit\n5S 查核', url: 'https://dereklin1429.github.io/5S-audit/', icon: 'fas fa-clipboard-check' },
@@ -140,7 +139,7 @@ function renderSettingsList() {
     container.innerHTML = ''; 
 
     if (currentLinks.length === 0) {
-        container.innerHTML = '<p style="color:var(--primary-color);">清單為空，請點擊下方「新增網址」！</p>';
+        container.innerHTML = '<p style="color:var(--primary-color);">清單為空，請點擊上方「新增網址」！</p>';
         return;
     }
 
@@ -150,7 +149,8 @@ function renderSettingsList() {
 
         // 點擊整個大按鈕，排除點擊動作按鈕時，彈出編輯介面
         item.addEventListener('click', (e) => {
-            if (e.target.closest('.admin-item-actions') === null) {
+             // 確保只有點擊非 action 按鈕區域時才觸發 edit
+            if (!e.target.closest('.admin-item-actions') && !e.target.closest('button')) {
                 editLink(link.id);
             }
         });
@@ -248,7 +248,7 @@ function deleteLink(id) {
 
 
 // =======================================================
-// 函數：模式切換 (登入/登出)
+// 函數：模式切換 (登入/登出) - 整合優化
 // =======================================================
 
 function initPage() {
@@ -256,12 +256,7 @@ function initPage() {
     renderUserButtons();
     setTitles('GUEST');
     
-    // 由於 ID 登入已移除，這部分邏輯不再需要
-    // const userIDInput = document.getElementById('userIDInput');
-    // if (currentUserID) {
-    //     userIDInput.value = currentUserID;
-    // }
-
+    // 顯示首頁元素
     document.getElementById('modeSelectSection').style.display = 'grid'; 
     document.getElementById('mainFeatures').style.display = 'none';
     document.getElementById('settingsPanel').style.display = 'none';
@@ -269,13 +264,11 @@ function initPage() {
     document.getElementById('hrDivider').style.display = 'none';
 }
 
-function handleLogin() {
-    // 此函數在移除 ID 登入後已無用，但如果 HTML 仍有調用，則執行進入 USER 模式
-    enterUserMode('訪客');
-}
-
 function showAdminPrompt() {
-    const password = prompt("請輸入管理員密碼 (Enter Admin Password)：");
+    // !! 安全性警告 !!：在實際生產環境中，密碼驗證必須在伺服器端 (後端) 處理，
+    // 以防密碼被前端開發者工具洩露。
+    const password = prompt("請輸入管理員密碼 (Enter Admin Password)：\n(注意：此密碼在前端程式碼中寫死，僅供測試用途)");
+
 
     if (password === ADMIN_PASSWORD) {
         enterSettingsMode();
@@ -291,7 +284,7 @@ function exitAdminView() {
 }
 
 function handleLogout(clearID = false) { 
-    // 修正：登出後回到 GUEST 首頁
+    // 登出後回到 GUEST 首頁
     if (clearID) {
         localStorage.removeItem(USER_ID_KEY);
         currentUserID = '';
@@ -306,8 +299,6 @@ function handleLogout(clearID = false) {
     document.getElementById('mainFeatures').style.display = 'none';
     document.getElementById('settingsPanel').style.display = 'none';
     document.getElementById('hrDivider').style.display = 'none';
-    
-    // 由於 ID 登入已移除，無需設置 userIDInput 的值
 }
 
 function enterSettingsMode() {
@@ -323,7 +314,7 @@ function enterSettingsMode() {
     renderSettingsList(); 
 }
 
-function enterUserMode(userID) {
+function enterUserMode() { // 移除冗餘的 userID 參數
     currentMode = 'USER';
     setTitles('USER');
     
@@ -333,8 +324,8 @@ function enterUserMode(userID) {
     document.getElementById('settingsPanel').style.display = 'none';
     document.getElementById('hrDivider').style.display = 'block'; 
     
-    // 修正：因為 ID 登入已移除，這裡顯示預設的 '訪客' 
-    const actualUserID = userID || '訪客';
+    // 由於 ID 登入已移除，這裡顯示預設的 '訪客'
+    const actualUserID = '訪客';
     document.getElementById('welcomeMessage').textContent = `歡迎, ${actualUserID} (Welcome, ${actualUserID})`;
 }
 
