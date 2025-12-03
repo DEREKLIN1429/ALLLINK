@@ -97,38 +97,26 @@ body {
     padding: 40px 0;
 }
 
-/* 移除 ID 登入後，讓新的「進入系統」按鈕佔據兩欄空間 */
-.login-controls-simplified {
-    grid-column: 1 / span 2; 
-    /* 確保寬扁比例和字體大小 */
-    aspect-ratio: 4 / 1; 
-    font-size: 2em !important; 
-}
-
 .mode-btn {
     /* 寬扁比例 */
-    aspect-ratio: 2 / 1; /* 恢復單個按鈕的比例 */
+    aspect-ratio: 2 / 1; 
     padding: 20px; 
     font-size: 1.8em; /* 字體加大 50% */
-    /* ... 保持其他樣式不變 ... */
+    
+    /* 橘白配色 */
+    background: linear-gradient(145deg, var(--button-bg), #eeeeee);
+    color: var(--button-text-color);
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 4px 0 var(--primary-color); 
+    transform: translateY(-2px);
 }
-/* ... 刪除原有的 .login-controls 樣式 (如果您保留了原始的 CSS 文件，請確保該樣式塊被忽略或移除) ... */
-
-/* 確保手機響應式時，按鈕仍然是 1 欄 */
-@media (max-width: 768px) {
-    /* ... (其他樣式不變) ... */
-    
-    .mode-buttons-grid {
-        grid-template-columns: 1fr; /* 修正為 1 欄 */
-    }
-    
-    /* 讓簡化後的進入系統按鈕在手機上只佔 1 欄 */
-    .login-controls-simplified {
-        grid-column: 1 / span 1; 
-        aspect-ratio: 2 / 1; /* 手機上變為標準比例 */
-        font-size: 1.5em !important;
-    }
-    /* ... (其餘媒體查詢樣式保持不變) ... */
+.mode-btn:hover {
+    transform: translateY(0); 
+    box-shadow: 0 4px 0 var(--primary-color);
+}
+.mode-btn i {
+    color: var(--primary-color); 
+    font-size: 1.5em; 
 }
 
 /* 登入控制區優化 */
@@ -138,13 +126,13 @@ body {
     border: 1px solid var(--primary-color);
 }
 
-/* 修正：ID 輸入欄位背景 */
+/* 修正：ID 輸入欄位加高 50% */
 #userIDInput {
-    padding: 10px;
+    padding: 15px; /* 加高約 50% */
     border: 2px solid var(--accent-color); 
     border-radius: 6px;
     font-size: 18px;
-    background-color: #3f3f3f; /* 深灰色背景 (非黑色) */
+    background-color: #3f3f3f; 
     color: var(--text-color-light);
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.7); 
     margin-bottom: 20px;
@@ -155,11 +143,12 @@ body {
 /* -------------------- USER/ADMIN 功能按鈕優化 (修正為 3 欄佈局) -------------------- */
 .button-grid, 
 .admin-button-grid {
-    /* 修正: 寬螢幕下使用 3 欄佈局 */
+    /* 修正: 寬螢幕下使用 3 欄佈局 (寬度縮減 10%) */
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 25px; 
+    grid-template-columns: repeat(3, minmax(200px, 0.20fr)); /* 減少按鈕佔比 */
+    gap: 40px; /* 增加間距 */
     padding-top: 30px;
+    justify-content: center; /* 居中佈局 */
 }
 
 .icon-btn, .admin-item-btn {
@@ -186,8 +175,11 @@ body {
 }
 
 /* -------------------- ADMIN 頁面清單 (大按鈕模式美化) -------------------- */
+.settings-section {
+    box-shadow: 0 0 15px rgba(40, 167, 69, 0.5);
+}
+.admin-button-grid { /* 佈局修正已在上方合併 */ }
 .admin-item-btn {
-    /* 橘白配色 */
     color: var(--button-text-color); 
     background: linear-gradient(145deg, var(--button-bg), #eeeeee);
     border: 2px solid var(--primary-color); 
@@ -238,7 +230,7 @@ body {
     color: white;
 }
 
-/* -------------------- Modal 內大按鈕優化 - 修正佈局 -------------------- */
+/* -------------------- Modal 內大按鈕優化 - 修正佈局與居中 -------------------- */
 .modal {
     z-index: 9999; 
     position: fixed; 
@@ -248,7 +240,7 @@ body {
     height: 100%; 
     overflow: auto; 
     background-color: rgba(0,0,0,0.8);
-    /* 關鍵修正: 確保隱藏時是 display: none */
+    /* 關鍵修正: Flexbox 居中 */
     display: none; 
     justify-content: center;
     align-items: center;
@@ -313,6 +305,7 @@ body {
         padding: 15px;
         margin: 5px;
         max-width: 100%;
+        box-sizing: border-box; 
     }
 
     /* 修正: 標題字體縮小 */
@@ -342,7 +335,7 @@ body {
         width: 100%;
     }
 
-    /* Modal 調整 - 確保在手機上居中 */
+    /* Modal 調整 */
     .modal-content {
         width: 98%; 
         padding: 10px;
@@ -377,4 +370,3 @@ body {
         width: 48%; 
     }
 }
-
