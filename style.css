@@ -170,26 +170,27 @@ body {
     border-bottom: 1px solid var(--text-color-dark);
 }
 
-/* 移除 h2 後，此段 CSS 不再需要，但保留以防萬一 */
 .settings-header-controls h2 {
-    margin: 0;
-    font-size: 1.5em; 
-    white-space: nowrap; 
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: none; /* 隱藏 h2，雖然 HTML 結構已移除，但 CSS 保持隱藏以防萬一 */
 }
 
 /* 管理控制按鈕樣式 */
 .admin-controls {
-    display: flex; /* 讓按鈕在水平方向排列 */
-    gap: 10px;
-    flex-wrap: nowrap; /* 預設不換行 */
+    /* 【關鍵修正】: 橫向 (row) 改為縱向 (column) 排列 */
+    display: flex;
+    flex-direction: column; 
+    gap: 5px; /* 縮小按鈕之間的間距 */
+    flex-wrap: nowrap;
+    
+    /* 讓按鈕區塊向右對齊 */
+    align-items: flex-end; 
 }
 
 .admin-controls button {
+    /* 移除寬度限制，讓按鈕內容決定寬度 */
+    width: auto;
     padding: 10px 15px;
     font-weight: bold;
-    border: none;
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s;
@@ -290,6 +291,9 @@ body {
     padding: 20px; 
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(40, 167, 69, 0.8);
+    /* 【關鍵修正】: 限制最大高度並允許內部滾動 */
+    max-height: 90vh; 
+    overflow-y: auto; 
 }
 
 .input-grid {
@@ -377,32 +381,26 @@ body {
         font-size: 2em !important; 
     }
 
-    /* Admin Setting Header 手機優化 - 確保按鈕置頂並水平分佈 */
+    /* Admin Setting Header 手機優化 - 確保按鈕置頂並縱向分佈 */
     .settings-header-controls {
-        flex-direction: row; /* 保持水平排列 */
-        justify-content: flex-end; /* 將按鈕區塊推到最右側 */
+        flex-direction: row; 
+        justify-content: flex-end; 
         align-items: center; 
-        gap: 0; /* 移除垂直間距 */
+        gap: 0; 
         padding-top: 10px;
         margin-bottom: 15px;
     }
-
-    .settings-header-controls h2 {
-        /* 由於 h2 移除，此區塊樣式影響變小 */
-        display: none;
-    }
     
     .admin-controls {
-        width: 100%;
-        display: flex; /* 保持 Flex 佈局 */
-        justify-content: space-between; /* 讓按鈕在兩端對齊 */
-        flex-wrap: wrap; /* 允許按鈕換行 */
+        /* 【關鍵修正】: 確保手機上也保持縱向排列，並右對齊 */
+        width: auto; 
+        flex-direction: column; 
+        align-items: flex-end; 
     }
     
     .admin-controls button {
-        /* 在手機上讓按鈕佔滿一半寬度，避免超出，並在空間不足時換行 */
-        width: 48%; 
-        box-sizing: border-box; 
+        /* 移除寬度限制 */
+        width: auto; 
         font-size: 0.9em;
     }
 
@@ -411,6 +409,7 @@ body {
         width: 98%; 
         padding: 10px;
         font-size: 0.9em;
+        max-height: 95vh; /* 手機上可以佔用更多高度 */
     }
     
     .modal-actions {
