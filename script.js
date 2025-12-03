@@ -1,7 +1,8 @@
 // =======================================================
 // 全域變數/常數
 // =======================================================
-const TITLE_LOGIN = '生產智能系統彙整 登入 | Production Intelligence System Login';
+// 修正標題：Production Intelligence System Login -> PIS Login
+const TITLE_LOGIN = '生產智能系統彙整 登入 | PIS Login'; 
 const TITLE_USER_MODE = '生產智能系統彙整 | Production Intelligence System Integration';
 const TITLE_ADMIN_MODE = '🛠️ 網址連結設定 (管理員模式)'; // 保持這個，因為它控制瀏覽器標題
 const ADMIN_PASSWORD = '12345'; // ⚠️ 注意：在前端硬編碼密碼非常不安全，僅供測試用途。
@@ -184,6 +185,7 @@ function showAddForm(id = null) {
     modal.style.display = 'flex'; 
 
     if (id !== null) {
+        // 修正文字：確保這裡不出現「請」字
         formTitle.textContent = '修改連結 | Edit Link';
         const link = currentLinks.find(l => l.id === id);
         if (link) {
@@ -193,6 +195,7 @@ function showAddForm(id = null) {
             selectedIconClass = link.icon || '';
         }
     } else {
+        // 修正文字：確保這裡不出現「請」字
         formTitle.textContent = '新增連結 | Add New Link';
         document.getElementById('edit-id').value = '';
         nameInput.value = '';
