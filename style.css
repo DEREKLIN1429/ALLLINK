@@ -88,11 +88,11 @@ body {
     transform: translateY(0);
 }
 
-/* -------------------- GUEST 模式大按鈕 (單欄佈局) -------------------- */
+/* -------------------- GUEST 模式大按鈕 -------------------- */
 .mode-buttons-grid {
-    /* 修正: 統一為 1 欄佈局 */
+    /* 修正: 2 欄佈局：1欄 for 進入系統，1欄 for 管理/新增/退出連結 */
     display: grid;
-    grid-template-columns: 1fr; 
+    grid-template-columns: repeat(2, 1fr); 
     gap: 30px;
     padding: 40px 0;
 }
@@ -119,14 +119,18 @@ body {
     font-size: 1.5em; 
 }
 
-/* 移除 grid-column 相關限制，讓按鈕自然堆疊 */
-.mode-btn-login, .mode-btn-admin, .mode-btn-add {
-    grid-column: auto;
-    aspect-ratio: 2 / 1; /* 保持寬扁比例 */
+/* 確保登入按鈕佔據第一欄 */
+.mode-btn-login {
+    grid-column: 1 / span 1;
 }
 
-/* 新增網址按鈕樣式 */
+/* 管理設定 & 新增網址 按鈕樣式 */
+.mode-btn-admin, .mode-btn-add {
+    grid-column: 2 / span 1; /* 與退出連結容器共享第二欄 */
+    aspect-ratio: 3.5 / 1; /* 調整按鈕比例，讓它們能在第二欄並排 */
+}
 .mode-btn-add {
+    /* 新增網址使用綠色強調 */
     background: linear-gradient(145deg, var(--accent-color), #24923e);
     color: white;
     border: 1px solid var(--accent-color);
@@ -138,22 +142,44 @@ body {
 .mode-btn-add:hover {
     box-shadow: 0 2px 0 #1e7e34;
 }
-/* 移除 .exit-links-container 相關樣式 */
 
 
-/* -------------------- USER 功能按鈕優化 (單欄佈局) -------------------- */
+/* 新增：退出連結容器的樣式 */
+.exit-links-container {
+    grid-column: 2 / span 1; /* 佔據第二欄 */
+    display: flex;
+    flex-direction: column; /* 縱向排列 */
+    justify-content: flex-end; /* 靠下對齊 */
+    gap: 10px;
+}
+.mode-btn-exit {
+    /* 繼承 mode-btn 樣式，但覆蓋為紅色 */
+    background: linear-gradient(145deg, #dc3545, #c42938);
+    color: white;
+    border: 1px solid #dc3545;
+    box-shadow: 0 4px 0 #b02a37;
+    aspect-ratio: 3.5 / 1; /* 調整比例，與管理/新增按鈕協調 */
+}
+.mode-btn-exit i {
+    color: white;
+}
+.mode-btn-exit:hover {
+    box-shadow: 0 2px 0 #b02a37;
+}
+
+/* -------------------- USER 功能按鈕優化 (修正為 3 欄佈局) -------------------- */
 .button-grid, 
 .admin-button-grid {
-    /* 修正: 統一為 1 欄佈局 */
+    /* 修正: 寬螢幕下使用 3 欄佈局 (寬度縮減 10%) */
     display: grid;
-    grid-template-columns: 1fr; 
-    gap: 20px; /* 調整間距 */
+    grid-template-columns: repeat(3, minmax(200px, 0.20fr)); /* 減少按鈕佔比 */
+    gap: 40px; /* 增加間距 */
     padding-top: 30px;
-    justify-content: center;
+    justify-content: center; /* 居中佈局 */
 }
 
 .icon-btn, .admin-item-btn {
-    /* 保持寬扁比例 */
+    /* 保持修正後的寬扁比例 */
     aspect-ratio: 2 / 1; 
     padding: 15px; 
     font-size: 1.2em; 
@@ -181,6 +207,7 @@ body {
     margin-top: 0; 
 }
 
+/* 新增的容器，用於標題和控制按鈕的 Flex 佈局 */
 .settings-header-controls {
     display: flex;
     justify-content: flex-end; 
@@ -194,8 +221,9 @@ body {
     display: none; 
 }
 
-/* 管理控制按鈕樣式 - 縱向排列 */
+/* 管理控制按鈕樣式 */
 .admin-controls {
+    /* 縱向排列 */
     display: flex;
     flex-direction: column; 
     gap: 5px; 
@@ -216,13 +244,13 @@ body {
 }
 
 #addNewBtn {
-    background-color: var(--accent-color); 
+    background-color: var(--accent-color); /* 綠色 */
     color: white;
     box-shadow: 0 4px 0 #1e7e34;
 }
 
 #exitSettingsBtn {
-    background-color: #dc3545; 
+    background-color: #dc3545; /* 紅色 */
     color: white;
     box-shadow: 0 4px 0 #b02a37;
 }
@@ -306,6 +334,7 @@ body {
     padding: 20px; 
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(40, 167, 69, 0.8);
+    /* 限制最大高度並允許內部滾動 */
     max-height: 90vh; 
     overflow-y: auto; 
 }
@@ -352,7 +381,7 @@ body {
 }
 
 /* ============================================= */
-/* 響應式設計 (單欄佈局優化) */
+/* 修正: 響應式設計 (手機畫面優化) */
 /* ============================================= */
 
 @media (max-width: 768px) {
@@ -363,10 +392,11 @@ body {
         box-sizing: border-box; 
     }
 
-    /* 標題調整 */
+    /* 修正: 標題字體縮小 */
     .header-container h1 {
         font-size: 1.2em; 
     }
+
     .header-container {
         flex-direction: column; 
         align-items: flex-start;
@@ -374,16 +404,29 @@ body {
         margin-bottom: 15px;
     }
 
-    /* 所有 Grid 佈局都將繼承基礎的 1 欄佈局 */
-    .mode-buttons-grid, 
-    .button-grid, 
-    .admin-button-grid {
-        grid-template-columns: 1fr; 
+    /* 所有功能區塊在手機上改為 1 欄佈局 */
+    .mode-buttons-grid {
+        grid-template-columns: 1fr; /* 修正為 1 欄 */
         gap: 15px; 
         padding: 15px 0;
     }
     
-    /* 按鈕大小與間距調整 */
+    /* 確保所有按鈕都佔滿一行 */
+    .mode-btn-login, .mode-btn-admin, .mode-btn-add {
+        grid-column: 1 / span 1; 
+        aspect-ratio: 2 / 1; /* 手機上維持寬扁比例 */
+    }
+
+    .exit-links-container {
+        grid-column: 1 / span 1; 
+        flex-direction: column;
+        gap: 10px;
+    }
+    .mode-btn-exit {
+        aspect-ratio: 2 / 1; 
+    }
+    
+    /* 確保所有大按鈕維持高度縮減和字體加大 */
     .mode-btn, .icon-btn, .admin-item-btn {
         min-height: 80px; 
         font-size: 1.5em; 
@@ -393,7 +436,7 @@ body {
         font-size: 2em !important; 
     }
 
-    /* Admin 頁面控制區調整 */
+    /* Admin Setting Header 手機優化 - 確保按鈕置頂並縱向分佈 */
     .settings-header-controls {
         flex-direction: row; 
         justify-content: flex-end; 
