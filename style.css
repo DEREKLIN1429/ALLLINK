@@ -162,18 +162,19 @@ body {
 /* 新增的容器，用於標題和控制按鈕的 Flex 佈局 */
 .settings-header-controls {
     display: flex;
-    justify-content: space-between; /* 讓標題和按鈕分別在兩端 */
+    /* 由於 h2 移除，這裡只需將按鈕區塊推到最右側 */
+    justify-content: flex-end; 
     align-items: center; /* 垂直居中對齊 */
     margin-bottom: 25px;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--text-color-dark);
 }
 
+/* 移除 h2 後，此段 CSS 不再需要，但保留以防萬一 */
 .settings-header-controls h2 {
-    /* 確保標題不會被按鈕擠壓 */
     margin: 0;
     font-size: 1.5em; 
-    white-space: nowrap; /* 避免標題換行，保持單行顯示 */
+    white-space: nowrap; 
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -376,17 +377,19 @@ body {
         font-size: 2em !important; 
     }
 
-    /* Admin Setting Header 手機優化 */
+    /* Admin Setting Header 手機優化 - 確保按鈕置頂並水平分佈 */
     .settings-header-controls {
-        flex-direction: column; /* 改為垂直排列 */
-        align-items: flex-start; /* 左對齊 */
-        gap: 15px; /* 增加間距 */
+        flex-direction: row; /* 保持水平排列 */
+        justify-content: flex-end; /* 將按鈕區塊推到最右側 */
+        align-items: center; 
+        gap: 0; /* 移除垂直間距 */
+        padding-top: 10px;
+        margin-bottom: 15px;
     }
 
     .settings-header-controls h2 {
-        width: 100%; /* 標題佔滿一行 */
-        text-align: left;
-        font-size: 1.2em;
+        /* 由於 h2 移除，此區塊樣式影響變小 */
+        display: none;
     }
     
     .admin-controls {
