@@ -3,7 +3,7 @@
 // =======================================================
 const TITLE_LOGIN = '生產智能系統彙整 登入 | Production Intelligence System Login';
 const TITLE_USER_MODE = '生產智能系統彙整 | Production Intelligence System Integration';
-const TITLE_ADMIN_MODE = '🛠️ 網址連結設定 (管理員模式)'; // 保持這個，因為它控制瀏覽器標題
+const TITLE_ADMIN_MODE = '🛠️ 網址連結設定 (管理員模式)'; 
 const ADMIN_PASSWORD = '12345'; // ⚠️ 注意：在前端硬編碼密碼非常不安全，僅供測試用途。
 
 const STORAGE_KEY = 'factory_links_data';
@@ -11,6 +11,16 @@ const USER_ID_KEY = 'current_user_id';
 let currentLinks = []; 
 let currentMode = 'GUEST'; 
 let currentUserID = ''; 
+
+// 新增：退出連結的儲存鍵
+const EXIT_STORAGE_KEY = 'factory_exit_links_data';
+let exitLinks = [];
+
+// 新增：預設的退出連結
+const DEFAULT_EXIT_LINKS = [
+    { id: 101, name: 'DEREK-Notes\n筆記本', url: 'https://dereklin1429.github.io/DEREK-Notes/' },
+    { id: 102, name: '賴桑記事本\nLAI Notes', url: 'https://dereklin1429.github.io/LAI/' },
+];
 
 const ICON_OPTIONS = [
     { class: 'fas fa-link', name: '預設/連結 (Link)' },
@@ -57,7 +67,6 @@ function setTitles(mode) {
             break;
         case 'ADMIN':
             // 由於 HTML 中已移除 h2 標籤，這裡只需確保 header 顯示 Admin 相關的訊息
-            // 這裡使用更簡潔的標題，因為 h2 標題已移除
             header.textContent = '管理員模式 | Admin Mode'; 
             pageTitle.textContent = TITLE_ADMIN_MODE;
             break;
@@ -72,11 +81,21 @@ function loadLinks() {
         currentLinks = DEFAULT_LINKS;
     }
     currentUserID = localStorage.getItem(USER_ID_KEY) || '';
+
+    // 新增：載入退出連結
+    const exitData = localStorage.getItem(EXIT_STORAGE_KEY);
+    if (exitData) {
+        exitLinks = JSON.parse(exitData);
+    } else {
+        exitLinks = DEFAULT_EXIT_LINKS;
+    }
 }
 
 function saveLinks() {
     localStorage.setItem(USER_ID_KEY, currentUserID); 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(currentLinks));
+    // 新增：儲存退出連結
+    localStorage.setItem(EXIT_STORAGE_KEY, JSON.stringify(exitLinks));
 }
 
 // =======================================================
@@ -117,6 +136,33 @@ function renderUserButtons() {
         grid.appendChild(button);
     });
 }
+
+// 新增：渲染 EXIT 連結
+function renderExitButtons() {
+    const container = document.getElementById('exitLinksContainer');
+    container.innerHTML = ''; 
+
+    exitLinks.forEach(link => {
+        const button = document.createElement('button');
+        button.className = 'mode-btn mode-btn-exit'; // 保持舊的 Exit 樣式
+        button.title = `${link.name}\n${link.url}`; 
+        
+        button.innerHTML = `
+            <i class="fas fa-sign-out-alt fa-4x"></i>
+            <span>${link.name.replace('\n', ' ')}</span>
+        `;
+        
+        // 點擊後直接導向新頁面
+        button.addEventListener('click', () => {
+             if (link.url) {
+                window.open(link.url, '_blank');
+            }
+        });
+
+        container.appendChild(button);
+    });
+}
+
 
 function populateIconSelect(selectedValue = '') {
     const select = document.getElementById('edit-icon');
@@ -264,18 +310,26 @@ function initPage() {
     document.getElementById('settingsPanel').style.display = 'none';
     document.getElementById('logoutSection').style.display = 'none';
     document.getElementById('hrDivider').style.display = 'none';
+
+    // 渲染退出連結按鈕
+    renderExitButtons();
 }
 
-function showAdminPrompt() {
-    // !! 安全性警告 !!：在實際生產環境中，密碼驗證必須在伺服器端 (後端) 處理，
-    // 以防密碼被前端開發者工具洩露。
+// 修正：增加 mode 參數來判斷是進入設定還是新增連結
+function showAdminPrompt(mode) {
+    // !! 安全性警告 !!：...
     const password = prompt("請輸入管理員密碼 (Enter Admin Password)：\n(注意：此密碼在前端程式碼中寫死，僅供測試用途)");
 
 
     if (password === ADMIN_PASSWORD) {
-        enterSettingsMode();
+        if (mode === 'ADMIN') {
+            enterSettingsMode();
+        } else if (mode === 'ADD_LINK') {
+            // 如果是新增網址請求，直接開啟 Modal
+            showAddForm(); 
+        }
     } else if (password !== null) {
-        alert("管理員密碼錯誤，無法進入設定 (Admin password incorrect)。");
+        alert("管理員密碼錯誤，無法執行此操作 (Admin password incorrect)。");
     }
 }
 
