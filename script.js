@@ -1,7 +1,6 @@
 // =======================================================
 // 全域變數/常數
 // =======================================================
-// 【修正點 1】更新標語常數
 const TITLE_LOGIN = '生產作業系統彙整 登入 | PIS Login';
 const TITLE_USER_MODE = '生產作業系統彙整 | PIS Integration';
 const TITLE_ADMIN_MODE = '🛠️ 網址連結設定 (管理員模式)';
@@ -13,7 +12,7 @@ let currentLinks = [];
 let currentMode = 'GUEST'; 
 let currentUserID = ''; 
 
-// 【修改】彩蛋相關常數與變數
+// 【修正點】彩蛋相關常數與變數
 let exitClickCount = 0; // 追蹤退出按鈕的連續點擊次數 (控制賴桑)
 let headerClickCount = 0; // 追蹤標題的連續點擊次數 (控制 DEREK Notes)
 let clickTimerExit = null; // 退出按鈕計時器
@@ -101,13 +100,18 @@ function renderUserButtons() {
     const grid = document.getElementById('mainFeatures');
     grid.innerHTML = '';    
 
-    // 篩選掉彩蛋連結 (ID 10 和 ID 11)，只渲染一般使用者連結
+    // 【修正點】過濾掉彩蛋連結，確保它們不會被當作正常連結渲染
     const userLinks = currentLinks.filter(link => 
         link.id !== DEREK_ID && link.id !== LAI_ID
     );
 
     if (userLinks.length === 0) {
-        grid.innerHTML = '<p style="color:var(--primary-color);">目前沒有設定任何按鈕！請聯絡管理員新增。</p>';
+        // 如果沒有其他連結，並且彩蛋也沒顯示，這裡就不會執行後續添加彩蛋按鈕的邏輯
+        // 這是正確的，因為 GUEST 模式下，如果沒有彩蛋，mainFeatures.style.display 會是 'none'。
+        // 在 USER 模式下，如果沒有連結，這裡會顯示提示。
+        if (currentMode === 'USER') {
+             grid.innerHTML = '<p style="color:var(--primary-color);">目前沒有設定任何按鈕！請聯絡管理員新增。</p>';
+        }
         return;
     }
         
@@ -140,10 +144,15 @@ function renderUserButtons() {
     const laiLink = currentLinks.find(l => l.id === LAI_ID);
     const derekLink = currentLinks.find(l => l.id === DEREK_ID);
     
+    // 如果 DOM 中已經有彩蛋按鈕的佔位符，則重建按鈕並加入
+    // 由於彩蛋只在 GUEST 模式下才會動態創建，這裡的邏輯主要確保在切換到 USER 模式時，彩蛋不會被覆蓋。
     if (laiLink && document.getElementById('laiLink')) {
+        // 先移除舊的佔位符 (如果有的話)
+        document.getElementById('laiLink').remove(); 
         container.appendChild(createHiddenLinkButton(laiLink, 'laiLink'));
     }
     if (derekLink && document.getElementById('derekLink')) {
+        document.getElementById('derekLink').remove();
         container.appendChild(createHiddenLinkButton(derekLink, 'derekLink'));
     }
 }
@@ -200,6 +209,8 @@ function renderSettingsList() {
 // =======================================================
 // 函數：CRUD 操作 (使用 Modal)
 // =======================================================
+// ... (CRUD 函數不變) ...
+
 function showAddForm(id = null) {
     const modal = document.getElementById('editModal');
     const formTitle = document.getElementById('modalTitle');
@@ -297,6 +308,7 @@ function updateUI(mode) {
     // 強制隱藏所有彩蛋按鈕並重設計數
     document.getElementById('laiLink')?.remove();
     document.getElementById('derekLink')?.remove();
+    
     exitClickCount = 0;
     headerClickCount = 0;
     if (clickTimerExit) clearTimeout(clickTimerExit);
@@ -367,7 +379,7 @@ function enterUserMode() {
 }
 
 // =======================================================
-// 函數：彩蛋功能 (連續點擊邏輯) - 【修正為雙彩蛋邏輯】
+// 函數：彩蛋功能 (連續點擊邏輯)
 // =======================================================
 
 function createHiddenLinkButton(link, elementId) {
@@ -409,17 +421,25 @@ function toggleHiddenLink(linkId, elementId, currentCount, showCount, hideCount)
     const container = document.getElementById('mainFeatures');
     let button = document.getElementById(elementId);
     
+    // 檢查是否有其他彩蛋按鈕顯示中 (確保容器顯示)
+    const isLaiShowing = !!document.getElementById('laiLink');
+    const isDerekShowing = !!document.getElementById('derekLink');
+
     if (currentCount === showCount && !button) {
         // 達到顯示次數，且按鈕不存在：顯示按鈕
         button = createHiddenLinkButton(link, elementId);
         container.appendChild(button);
+        // 【修正點】只有在 GUEST 模式下，且至少有一個彩蛋顯示時，才顯示 mainFeatures
         container.style.display = 'grid'; 
         return 0; // 重設計數
     } else if (currentCount === hideCount && button) {
         // 達到隱藏次數，且按鈕存在：隱藏按鈕
         button.remove();
-        // 如果兩個按鈕都隱藏，就隱藏 grid
-        if (!document.getElementById('laiLink') && !document.getElementById('derekLink')) {
+        
+        // 檢查是否所有彩蛋都隱藏了
+        const areAllHidden = (elementId === 'laiLink' ? !isDerekShowing : !isLaiShowing);
+
+        if (areAllHidden) {
             container.style.display = 'none';
         }
         return 0; // 重設計數
@@ -444,7 +464,7 @@ function handleHeaderClick() {
         console.log('標題點擊間隔過長，計數已重設。');
     }, CLICK_THRESHOLD);
     
-    // 【修正點 2】DEREK Notes (ID 10) - 10次顯示 / 20次隱藏
+    // 【修正】確保只影響 DEREK Notes
     headerClickCount = toggleHiddenLink(DEREK_ID, 'derekLink', headerClickCount, 10, 20);
 
     // 如果計數超過最大所需點擊次數 (20)，重設以防無窮遞增
@@ -468,7 +488,7 @@ function handleExitClick() {
         console.log('退出按鈕點擊間隔過長，計數已重設。');
     }, CLICK_THRESHOLD);
     
-    // 【修正點 3】賴桑記事本 (ID 11) - 5次顯示 / 10次隱藏
+    // 【修正】確保只影響 賴桑記事本
     exitClickCount = toggleHiddenLink(LAI_ID, 'laiLink', exitClickCount, 5, 10);
 
     // 如果計數超過最大所需點擊次數 (10)，重設以防無窮遞增
@@ -495,7 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
         exitBtn.addEventListener('click', handleExitClick);
     }
     
-    // 【新增】為標題添加事件監聽器
+    // 為標題添加事件監聽器
     const headerBtn = document.getElementById('mainHeader');
     if (headerBtn) {
         headerBtn.addEventListener('click', handleHeaderClick);
