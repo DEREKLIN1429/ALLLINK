@@ -3,7 +3,7 @@
 // =======================================================
 const TITLE_LOGIN = '生產智能系統彙整 登入 | Production Intelligence System Login';
 const TITLE_USER_MODE = '生產智能系統彙整 | Production Intelligence System Integration';
-const TITLE_ADMIN_MODE = '🛠️ 網址連結設定 (管理員模式)';
+const TITLE_ADMIN_MODE = '🛠️ 網址連結設定 (管理員模式)'; // 保持這個，因為它控制瀏覽器標題
 const ADMIN_PASSWORD = '12345'; // ⚠️ 注意：在前端硬編碼密碼非常不安全，僅供測試用途。
 
 const STORAGE_KEY = 'factory_links_data';
@@ -27,7 +27,6 @@ const ICON_OPTIONS = [
     { class: 'fas fa-cut', name: 'Cutting (Scissors)' },
 ];
 
-// 【恢復】原始連結清單，移除 DEREK Notes 和 賴桑記事本
 const DEFAULT_LINKS = [
     { id: 1, name: 'Machine-NG\n機械故障', url: 'https://dereklin1429.github.io/Machine-NG/', icon: 'fas fa-exclamation-triangle' },
     { id: 2, name: '5S Audit\n5S 查核', url: 'https://dereklin1429.github.io/5S-audit/', icon: 'fas fa-clipboard-check' },
@@ -57,6 +56,8 @@ function setTitles(mode) {
             pageTitle.textContent = TITLE_USER_MODE;
             break;
         case 'ADMIN':
+            // 由於 HTML 中已移除 h2 標籤，這裡只需確保 header 顯示 Admin 相關的訊息
+            // 這裡使用更簡潔的標題，因為 h2 標題已移除
             header.textContent = '管理員模式 | Admin Mode'; 
             pageTitle.textContent = TITLE_ADMIN_MODE;
             break;
@@ -68,7 +69,6 @@ function loadLinks() {
     if (data) {
         currentLinks = JSON.parse(data);
     } else {
-        // 這裡會自動使用沒有彩蛋的 DEFAULT_LINKS
         currentLinks = DEFAULT_LINKS;
     }
     currentUserID = localStorage.getItem(USER_ID_KEY) || '';
@@ -149,6 +149,7 @@ function renderSettingsList() { 
         const item = document.createElement('div');
         item.className = 'admin-item-btn'; 
 
+        // 點擊整個大按鈕，排除點擊動作按鈕時，彈出編輯介面
         item.addEventListener('click', (e) => {
              // 確保只有點擊非 action 按鈕區域時才觸發 edit
             if (!e.target.closest('.admin-item-actions') && !e.target.closest('button')) {
@@ -266,7 +267,8 @@ function initPage() {
 }
 
 function showAdminPrompt() {
-    // !! 安全性警告 !!：在實際生產環境中，密碼驗證必須在伺服器端 (後端) 處理
+    // !! 安全性警告 !!：在實際生產環境中，密碼驗證必須在伺服器端 (後端) 處理，
+    // 以防密碼被前端開發者工具洩露。
     const password = prompt("請輸入管理員密碼 (Enter Admin Password)：\n(注意：此密碼在前端程式碼中寫死，僅供測試用途)");
 
 
@@ -314,7 +316,7 @@ function enterSettingsMode() {
     renderSettingsList(); 
 }
 
-function enterUserMode() { 
+function enterUserMode() { // 移除冗餘的 userID 參數
     currentMode = 'USER';
     setTitles('USER');
     
@@ -324,11 +326,9 @@ function enterUserMode() {
     document.getElementById('settingsPanel').style.display = 'none';
     document.getElementById('hrDivider').style.display = 'block'; 
     
-    // 這裡顯示預設的 '訪客'
+    // 由於 ID 登入已移除，這裡顯示預設的 '訪客'
     const actualUserID = '訪客';
     document.getElementById('welcomeMessage').textContent = `歡迎, ${actualUserID} (Welcome, ${actualUserID})`;
-    
-    renderUserButtons(); // 確保按鈕被渲染
 }
 
 
